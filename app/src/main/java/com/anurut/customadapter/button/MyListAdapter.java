@@ -14,12 +14,14 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.anurut.customadapter.R;
 
+import java.util.ArrayList;
+
 public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListViewHolder>{
 
-    private MyListData[] listData;
+    private MyListData[] listArray;
 
-    public MyListAdapter(MyListData[] listData){
-        this.listData = listData;
+    public MyListAdapter(MyListData[] listArray){
+        this.listArray = listArray;
     }
 
     @NonNull
@@ -35,7 +37,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListView
     @Override
     public void onBindViewHolder(@NonNull MyListViewHolder holder, int position) {
 
-        final MyListData myListData = listData[position];
+        final MyListData myListData = listArray[position];
         holder.textView.setText(myListData.getButtonName());
         holder.imageButton.setImageResource(myListData.getButtonImgId());
         holder.imageButton.setTag(myListData.getButtonName());
@@ -53,7 +55,7 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListView
 
     @Override
     public int getItemCount() {
-        return listData.length;
+        return listArray.length;
     }
 
     class MyListViewHolder extends ViewHolder {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">home assistant mqtt</string>
+    <string name="app_name">custom layout</string>
     <string name="fan_text">fan</string>
     <string name="tubeLight_text">tube light</string>
     <string name="nightLight_text">night light</string>

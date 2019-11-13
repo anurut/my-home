@@ -29,8 +29,6 @@ public class MqttHelper {
     // Constructor
     public MqttHelper(Context context){
 
-
-
         mqttAndroidClient = new MqttAndroidClient(context,serverUri, clientID);
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
@@ -137,7 +135,7 @@ public class MqttHelper {
                 MqttMessage pMessage = new MqttMessage();
                 pMessage.setPayload(publishMessage.getBytes());
                 mqttAndroidClient.publish(publishTopic, pMessage);
-            } catch (MqttException mq) {
+            } catch (Exception mq) {
                 mq.printStackTrace();
             }
         }

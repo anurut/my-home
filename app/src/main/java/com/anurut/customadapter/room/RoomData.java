@@ -1,28 +1,31 @@
 package com.anurut.customadapter.room;
 
-import com.anurut.customadapter.button.MyListData;
-
 public class RoomData {
 
     private String roomName;
-    private String mqttStatus;
-    private MyListData[] buttons;
+    private int roomImageId;
 
-    public RoomData(String roomName, String mqttStatus, MyListData[] buttons){
+    public RoomData(String roomName, int roomImageId){
         this.roomName = roomName;
-        this.mqttStatus = mqttStatus;
-        this.buttons = buttons;
+        this.roomImageId = roomImageId;
     }
+
 
     public String getRoomName(){ return roomName;}
 
     public void setRoomName(String roomName){ this.roomName = roomName;}
 
-    public String getMqttStatus(){ return mqttStatus;}
+    public int getRoomImageId(){ return roomImageId;}
 
-    public void setMqttStatus(String mqttStatus){ this.mqttStatus = mqttStatus;}
+    public void setRoomImageId(int roomImageId){ this.roomImageId = roomImageId;}
 
-    public MyListData[] getButtons() { return buttons; }
+    //public RoomData[] getRooms() { return rooms; }
 
-    public void setButtonsData(MyListData[] listData){   this.buttons = listData;   }
+//    public void setRoomsData(String roomName, int roomImageId){
+//       this.roomData.add(new RoomData(roomName,roomImageId));
+//    }
+//
+//    public ArrayList<RoomData> getRoomData(){
+//        return this.roomData;
+//    }
 }
