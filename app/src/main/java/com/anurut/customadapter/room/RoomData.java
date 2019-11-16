@@ -19,13 +19,4 @@ public class RoomData {
 
     public void setRoomImageId(int roomImageId){ this.roomImageId = roomImageId;}
 
-    //public RoomData[] getRooms() { return rooms; }
-
-//    public void setRoomsData(String roomName, int roomImageId){
-//       this.roomData.add(new RoomData(roomName,roomImageId));
-//    }
-//
-//    public ArrayList<RoomData> getRoomData(){
-//        return this.roomData;
-//    }
 }

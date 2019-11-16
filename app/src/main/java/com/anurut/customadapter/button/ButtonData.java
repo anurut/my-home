@@ -2,13 +2,13 @@ package com.anurut.customadapter.button;
 
 import java.util.ArrayList;
 
-public class MyListData {
+public class ButtonData {
 
     private String buttonName;
     private int buttonId;
-    private ArrayList<MyListData> data;
+    private ArrayList<ButtonData> data;
 
-    public MyListData(String buttonName, int buttonImgId){
+    public ButtonData(String buttonName, int buttonImgId){
         this.buttonName = buttonName;
         this.buttonId = buttonImgId;
     }
@@ -21,11 +21,11 @@ public class MyListData {
 
     public void setButtonImgId(int buttonId){ this.buttonId = buttonId;}
 
-    public ArrayList<MyListData> getListData(){ return data; }
+    public ArrayList<ButtonData> getListData(){ return data; }
 
     public void setListData(String buttonName, int buttonImageId){
 
-        this.data.add(new MyListData(buttonName, buttonImageId));
+        this.data.add(new ButtonData(buttonName, buttonImageId));
 
     }
 

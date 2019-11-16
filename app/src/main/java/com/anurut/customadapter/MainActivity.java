@@ -5,9 +5,12 @@ import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.EditText;
 
 import com.anurut.customadapter.Interface.CallResponse;
 import com.anurut.customadapter.helper.MqttHelper;
@@ -19,6 +22,7 @@ import com.google.android.material.snackbar.Snackbar;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -27,11 +31,15 @@ public class MainActivity extends AppCompatActivity {
 
     public MqttHelper helper;
     public RecyclerView recyclerView;
+    public static String MSG = "com.anurut.customadapter.ROOMS";
+
+    public static MainActivity mainActivity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        mainActivity = this;
 
         recyclerView = findViewById(R.id.roomsRecyclerView);
         recyclerView.setHasFixedSize(true);
@@ -72,7 +80,7 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) {
+            public void messageArrived(String topic, MqttMessage message) throws JSONException {
                 String msgPayload = new String(message.getPayload());
                 Log.w("mqtt","Message arrived!, Topic: "+ topic+ " Payload: " + msgPayload);
                 MqttMessageReceived messageReceived= new MqttMessageReceived(topic, message, new CallResponse() {
@@ -90,6 +98,8 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
+
             }
 
             @Override
@@ -109,5 +119,12 @@ public class MainActivity extends AppCompatActivity {
         View contextView = findViewById(R.id.mainActivity);
         Snackbar snackbar = Snackbar.make(contextView,"Button state synced successfully!", Snackbar.LENGTH_LONG);
         snackbar.show();
+    }
+
+    public void onRoomIconClick(View view){
+        Intent intent = new Intent(this, RoomActivity.class);
+
+        intent.putExtra(MSG, view.getTag().toString());
+        startActivity(intent);
     }
 }

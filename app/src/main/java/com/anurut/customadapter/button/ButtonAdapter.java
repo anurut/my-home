@@ -14,13 +14,11 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.anurut.customadapter.R;
 
-import java.util.ArrayList;
+public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListViewHolder>{
 
-public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListViewHolder>{
+    private ButtonData[] listArray;
 
-    private MyListData[] listArray;
-
-    public MyListAdapter(MyListData[] listArray){
+    public ButtonAdapter(ButtonData[] listArray){
         this.listArray = listArray;
     }
 
@@ -37,12 +35,12 @@ public class MyListAdapter extends RecyclerView.Adapter<MyListAdapter.MyListView
     @Override
     public void onBindViewHolder(@NonNull MyListViewHolder holder, int position) {
 
-        final MyListData myListData = listArray[position];
-        holder.textView.setText(myListData.getButtonName());
-        holder.imageButton.setImageResource(myListData.getButtonImgId());
-        holder.imageButton.setTag(myListData.getButtonName());
-        holder.textView.setTag(myListData.getButtonName());
-        holder.constraintLayout.setTag(myListData.getButtonName());
+        final ButtonData buttonData = listArray[position];
+        holder.textView.setText(buttonData.getButtonName());
+        holder.imageButton.setImageResource(buttonData.getButtonImgId());
+        holder.imageButton.setTag(buttonData.getButtonName());
+        holder.textView.setTag(buttonData.getButtonName());
+        holder.constraintLayout.setTag(buttonData.getButtonName());
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

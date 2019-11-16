@@ -11,7 +11,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import com.anurut.customadapter.MainActivity;
 import com.anurut.customadapter.R;
+import com.anurut.customadapter.helper.ClickAction;
 
 import java.util.ArrayList;
 
@@ -45,6 +47,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
             @Override
             public void onClick(View v) {
                 Log.d("On Click",v.getTag().toString());
+
+                //MainActivity.mainActivity.onRoomIconClick(v);
+                ClickAction clk = new ClickAction();
+                clk.onRoomIconClick(v,MainActivity.mainActivity);
             }
         });
     }
