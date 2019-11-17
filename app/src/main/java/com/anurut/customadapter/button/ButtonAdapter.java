@@ -1,6 +1,7 @@
 package com.anurut.customadapter.button;
 
 
+import android.app.Activity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,19 +15,24 @@ import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
 import com.anurut.customadapter.R;
 
+import java.util.ArrayList;
+
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListViewHolder>{
 
-    private ButtonData[] listArray;
+    private ArrayList<ButtonData> buttonData;
+    private Activity activity;
 
-    public ButtonAdapter(ButtonData[] listArray){
-        this.listArray = listArray;
+    public ButtonAdapter(ArrayList<ButtonData> buttonData, Activity activity){
+
+        this.buttonData = buttonData;
+        this.activity = activity;
     }
 
     @NonNull
     @Override
     public MyListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
+        LayoutInflater layoutInflater = LayoutInflater.from(activity);
         View listItem = layoutInflater.inflate(R.layout.mqtt_button_layout,parent,false);
         MyListViewHolder viewHolder = new MyListViewHolder(listItem);
         return viewHolder;
@@ -35,12 +41,12 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
     @Override
     public void onBindViewHolder(@NonNull MyListViewHolder holder, int position) {
 
-        final ButtonData buttonData = listArray[position];
-        holder.textView.setText(buttonData.getButtonName());
-        holder.imageButton.setImageResource(buttonData.getButtonImgId());
-        holder.imageButton.setTag(buttonData.getButtonName());
-        holder.textView.setTag(buttonData.getButtonName());
-        holder.constraintLayout.setTag(buttonData.getButtonName());
+        final ButtonData mybuttonData = buttonData.get(position);
+        holder.textView.setText(mybuttonData.getButtonName());
+        holder.imageButton.setImageResource(mybuttonData.getButtonImgId());
+        holder.imageButton.setTag(mybuttonData.getButtonName());
+        holder.textView.setTag(mybuttonData.getButtonName());
+        holder.constraintLayout.setTag(mybuttonData.getButtonName());
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -53,7 +59,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
     @Override
     public int getItemCount() {
-        return listArray.length;
+        return buttonData.size();
     }
 
     class MyListViewHolder extends ViewHolder {

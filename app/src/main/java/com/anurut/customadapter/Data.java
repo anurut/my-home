@@ -1,17 +1,18 @@
 package com.anurut.customadapter;
 
+import android.util.Log;
+
 import com.anurut.customadapter.button.ButtonData;
 import com.anurut.customadapter.room.RoomData;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Data {
 
-    private static ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
+    private ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
     private static ArrayList<RoomData> roomDataArrayList = new ArrayList<>();
-
-    public static boolean buttonState;
-    public static boolean roomState;
+    private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
 
     public static ArrayList<RoomData> getRoomDataAttayList(){  return roomDataArrayList;    }
 
@@ -42,7 +43,27 @@ public class Data {
         String roomName;
         String currentString = topic;
         String[] separated = currentString.split("/");
-        roomName =  separated[1];
+        String room_name =  separated[1];
+
+        switch (room_name){
+            case "masterbedroom":
+                roomName = "master bedroom";
+                break;
+            case "masterbathroom":
+                roomName = "master bathroom";
+            case "guestbedroom":
+                roomName = "guest bedroom";
+                break;
+            case "guestbathroom":
+                roomName = "guest bathroom";
+                break;
+            case "kitchen":
+                roomName = "kitchen";
+                break;
+            default:
+                throw new IllegalStateException("Unexpected value: " + room_name);
+        }
+
         return roomName;
     }
 
@@ -57,5 +78,17 @@ public class Data {
                 if (roomData.getRoomName().equals(roomName.toLowerCase())) return i;
             }
         }return 0;
+    }
+
+
+    public static void addToButtonDataMap(String roomName, ArrayList<ButtonData> buttonData) {
+
+       Data.buttonDataMap.put(roomName, buttonData);
+       Log.d("mqtt",Data.buttonDataMap.get(roomName).get(0).getButtonName());
+    }
+
+    public static ArrayList<ButtonData> getButtonDataArrayList(String roomName){
+        Log.d("mqtt","Button Data Size "+Data.buttonDataMap.get(roomName).size());
+        return Data.buttonDataMap.get(roomName);
     }
 }

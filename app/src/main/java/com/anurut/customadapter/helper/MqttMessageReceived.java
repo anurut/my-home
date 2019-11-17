@@ -6,6 +6,7 @@ import com.anurut.customadapter.Data;
 import com.anurut.customadapter.Interface.CallResponse;
 import com.anurut.customadapter.R;
 import com.anurut.customadapter.button.ButtonData;
+import com.anurut.customadapter.button.ButtonState;
 import com.anurut.customadapter.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -23,7 +24,7 @@ public class MqttMessageReceived {
     private MqttMessage message;
     private String topic;
     public CallResponse callResponse;
-    public ArrayList<ButtonData> buttonData;
+
     public HashMap<String,ArrayList<ButtonData>> roomWiseButtonData;
 
 
@@ -53,75 +54,43 @@ public class MqttMessageReceived {
 
             // set room name and icon
             switch (roomName.toLowerCase()){
-                case "masterbedroom":
-                    room_name= "master bedroom";
+                case "master bedroom":
                     roomImageId = R.drawable.bedroom_black_24dp;
 
                     break;
-                case "masterbathroom":
-                    room_name = "master bathroom";
+                case "master bathroom":
                     roomImageId = R.drawable.bathroom_black_24dp;
                     break;
-                case "guestbedroom":
-                    room_name = "guest bedroom";
+                case "guest bedroom":
                     roomImageId = R.drawable.bedroom_black_24dp;
                     break;
-                case "guestbathroom":
-                    room_name = "guest bathroom";
+                case "guest bathroom":
                     roomImageId = R.drawable.bathroom_black_24dp;
                     break;
                 case "kitchen":
-                    room_name = "kitchen";
                     roomImageId = R.drawable.kitchen_black_24dp;
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + roomName.toLowerCase());
             }
 
-            if(!Data.roomAlreadyExist(room_name)){
+            if(!Data.roomAlreadyExist(roomName)){
 
-                Data.addToRoomDataArrayList(new RoomData(room_name,roomImageId));
+                Data.addToRoomDataArrayList(new RoomData(roomName,roomImageId));
                 Log.d("mqtt", "Room added: " + roomName);
             }
 
             callResponse.getResponse(getRoomDataAttayList());
     }
 
-    private void deleteRoom(String topic) throws JSONException {
+    private void deleteRoom(String topic) {
         String room_name = "";
         String roomName = getRoomName(topic);
         int roomImageId = 0;
 
-        // set room name and icon
-        switch (roomName.toLowerCase()){
-            case "masterbedroom":
-                room_name= "master bedroom";
-                roomImageId = R.drawable.bedroom_black_24dp;
-                //setRoomButtons(topic, message);
-                break;
-            case "masterbathroom":
-                room_name = "master bathroom";
-                roomImageId = R.drawable.bathroom_black_24dp;
-                break;
-            case "guestbedroom":
-                room_name = "guest bedroom";
-                roomImageId = R.drawable.bedroom_black_24dp;
-                break;
-            case "guestbathroom":
-                room_name = "guest bathroom";
-                roomImageId = R.drawable.bathroom_black_24dp;
-                break;
-            case "kitchen":
-                room_name = "kitchen";
-                roomImageId = R.drawable.kitchen_black_24dp;
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + roomName.toLowerCase());
-        }
+        if(Data.roomAlreadyExist(roomName)){
 
-        if(Data.roomAlreadyExist(room_name)){
-
-            Data.deleteRoomDataFromArrayList(room_name);
+            Data.deleteRoomDataFromArrayList(roomName);
 
             Log.d("mqtt", "Room deleted: " + roomName);
             Log.d("mqtt", "Rooms remained: " + getRoomDataAttayList().toString());
@@ -134,6 +103,8 @@ public class MqttMessageReceived {
 
         String msgPayload = new String(message.getPayload());
         JSONObject payload = new JSONObject(msgPayload);
+        ArrayList<ButtonData> buttonData =  new ArrayList<>();
+        String roomName = Data.getRoomName(topic);
 
         if(payload.has("Time")){
             switch (topic.toLowerCase()){
@@ -141,18 +112,26 @@ public class MqttMessageReceived {
 
                     if(payload.has("POWER1")){
                         Log.d("mqtt", "Setting up POWER1");
+                        buttonData.add(new ButtonData("tube light", R.drawable.power_black_24dp));
+                        ButtonState.setButtonState(roomName,payload.getString("POWER1"));
+//                        //Log.d("mqtt",)
                     }
-
                     if(payload.has("POWER2")){
                         Log.d("mqtt", "Setting up POWER2");
+                        buttonData.add(new ButtonData("ceiling fan", R.drawable.power_black_24dp));
+                        ButtonState.setButtonState(roomName,payload.getString("POWER2"));
                     }
 
                     if(payload.has("POWER3")){
                         Log.d("mqtt", "Setting up POWER3");
+                        buttonData.add(new ButtonData("night light", R.drawable.power_black_24dp));
+                        ButtonState.setButtonState(roomName,payload.getString("POWER3"));
                     }
 
                     if(payload.has("POWER4")){
                         Log.d("mqtt", "Setting up POWER4");
+                        buttonData.add(new ButtonData("dummy light", R.drawable.power_black_24dp));
+                        ButtonState.setButtonState(roomName,payload.getString("POWER4"));
                     }
                     break;
                 case "stat/kitchen/result":
@@ -176,6 +155,8 @@ public class MqttMessageReceived {
                 default:
                     throw new IllegalStateException("Unexpected value: " + topic.toLowerCase());
             }
+
+            Data.addToButtonDataMap(roomName, buttonData);
         }
 
     }
