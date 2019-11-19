@@ -4,9 +4,6 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.anurut.customadapter.button.ButtonAdapter;
-import com.anurut.customadapter.button.ButtonData;
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -16,16 +13,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-
 public class RoomActivity extends AppCompatActivity {
 
     public RecyclerView recyclerView;
+    //private Toolbar toolbar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
+
+
+        //toolbar = findViewById(R.id.room_toolbar);
+        //toolbar.setNavigationIcon(R.drawable.ab);
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.MSG);
@@ -45,6 +45,10 @@ public class RoomActivity extends AppCompatActivity {
 
         recyclerView.setAdapter(adapter);
 
+    }
+
+    public void onBackButtonClick(View view){
+        finish();
     }
 
 }
