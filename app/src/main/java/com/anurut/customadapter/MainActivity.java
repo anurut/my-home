@@ -34,6 +34,8 @@ public class MainActivity extends AppCompatActivity {
     public static String MSG = "com.anurut.customadapter.ROOMS";
 
     public static MainActivity mainActivity;
+    public int activityStateCheck  = 0;
+    public String buttonTagHold = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,12 +43,10 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         mainActivity = this;
 
+        startMqtt();
+
         recyclerView = findViewById(R.id.roomsRecyclerView);
         recyclerView.setHasFixedSize(true);
-
-
-
-        startMqtt();
 
     }
 
@@ -83,13 +83,19 @@ public class MainActivity extends AppCompatActivity {
             public void messageArrived(String topic, MqttMessage message) throws JSONException {
                 String msgPayload = new String(message.getPayload());
                 Log.w("mqtt","Message arrived!, Topic: "+ topic+ " Payload: " + msgPayload);
+
+
+                if (activityStateCheck == 1){
+                    RoomActivity.roomActivity.refreshData();
+                }
+
                 MqttMessageReceived messageReceived= new MqttMessageReceived(topic, message, new CallResponse() {
                     @Override
                     public void getResponse(ArrayList<RoomData> roomData) {
 
                         System.out.println("Row Count : "+  roomData.size());
 
-                        RoomAdapter adapter = new RoomAdapter(roomData);
+                        RoomAdapter adapter = new RoomAdapter(MainActivity.this,roomData);
                         if(roomData.size() <= 2)
                             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),1));
                         else
@@ -98,6 +104,12 @@ public class MainActivity extends AppCompatActivity {
 
                     }
                 });
+
+                try{
+                    messageReceived.updateButtonState();
+                } catch (Exception e){
+                    Log.d("mqtt", "" + e);
+                }
 
 
             }
@@ -121,10 +133,13 @@ public class MainActivity extends AppCompatActivity {
         snackbar.show();
     }
 
-    public void onRoomIconClick(View view){
-        Intent intent = new Intent(this, RoomActivity.class);
+    public void publish(String publishTopic, String currentState){
 
-        intent.putExtra(MSG, view.getTag().toString());
-        startActivity(intent);
+        if(currentState.equalsIgnoreCase("ON")){
+            helper.publishMessage("OFF",publishTopic);
+        }else{
+            helper.publishMessage("ON",publishTopic);
+        }
     }
+
 }

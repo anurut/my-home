@@ -5,6 +5,10 @@ import android.util.Log;
 import com.anurut.customadapter.button.ButtonData;
 import com.anurut.customadapter.room.RoomData;
 
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -63,8 +67,15 @@ public class Data {
             default:
                 throw new IllegalStateException("Unexpected value: " + room_name);
         }
-
         return roomName;
+    }
+
+    public static String getPayloadKey(String topic){
+
+        String currentString = topic;
+        String[] separated = currentString.split("/");
+        String payloadKey =  separated[2];
+        return payloadKey;
     }
 
 
@@ -90,5 +101,19 @@ public class Data {
     public static ArrayList<ButtonData> getButtonDataArrayList(String roomName){
         Log.d("mqtt","Button Data Size "+Data.buttonDataMap.get(roomName).size());
         return Data.buttonDataMap.get(roomName);
+    }
+
+    public static void updateButtonState(String topic, MqttMessage message, int index){
+
+        try {
+            String roomName = getRoomName(topic);
+            String key = getPayloadKey(topic);
+            Log.d("mqtt", "Button State before update " + Data.buttonDataMap.get(roomName).get(index).getButtonName()+ " " + Data.buttonDataMap.get(roomName).get(index).getButtonState());
+            Data.buttonDataMap.get(roomName).get(index).setButtonState(message.toString());
+            Log.d("mqtt", "Button State after update " + Data.buttonDataMap.get(roomName).get(index).getButtonName()+ " " + Data.buttonDataMap.get(roomName).get(index).getButtonState());
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }

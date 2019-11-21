@@ -21,15 +21,16 @@ public class MqttHelper {
     public MqttAndroidClient mqttAndroidClient;
     final String serverUri = "tcp://malhan.duckdns.org:1883";//"tcp://192.168.1.99:1883";
     String clientID = MqttClient.generateClientId();//"AndroidClient";
-    final String[] subTopic = {"stat/+/RESULT","tele/#"};//"stat/#";
+    final String[] subTopic = {"stat/#","tele/#"};//"stat/#";
     final int[] qos = {1,1};
     final String userName = "admin";
     final String password = "bhootbangla";
 
     // Constructor
-    public MqttHelper(Context context){
+    public MqttHelper(Context context) {
 
         mqttAndroidClient = new MqttAndroidClient(context,serverUri, clientID);
+
         mqttAndroidClient.setCallback(new MqttCallbackExtended() {
             @Override
             public void connectComplete(boolean reconnect, String serverURI) {

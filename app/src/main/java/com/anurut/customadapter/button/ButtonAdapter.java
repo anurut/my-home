@@ -13,7 +13,10 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
+import com.anurut.customadapter.MainActivity;
 import com.anurut.customadapter.R;
+import com.anurut.customadapter.RoomActivity;
+import com.anurut.customadapter.helper.MqttHelper;
 
 import java.util.ArrayList;
 
@@ -39,23 +42,37 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyListViewHolder holder, int position) {
-
+    public void onBindViewHolder(@NonNull final MyListViewHolder holder, int position) {
         final ButtonData mybuttonData = buttonData.get(position);
+        System.out.println("Get Button State :" + mybuttonData.getButtonState());
+
+        if (mybuttonData.getButtonState().equalsIgnoreCase("OFF")){
+            holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.buttonColor));
+        }
+        else {
+            holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
+        }
+
+
         holder.textView.setText(mybuttonData.getButtonName());
         holder.imageButton.setImageResource(mybuttonData.getButtonImgId());
         holder.imageButton.setTag(mybuttonData.getButtonName());
         holder.textView.setTag(mybuttonData.getButtonName());
         holder.constraintLayout.setTag(mybuttonData.getButtonName());
+
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
                 Log.d("On Click",v.getTag().toString());
-
+                MainActivity.mainActivity.publish(mybuttonData.getCommandTopic(),mybuttonData.getButtonState());
             }
         });
+
+
     }
+
+
 
     @Override
     public int getItemCount() {

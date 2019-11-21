@@ -1,5 +1,7 @@
 package com.anurut.customadapter.room;
 
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.anurut.customadapter.MainActivity;
 import com.anurut.customadapter.R;
+import com.anurut.customadapter.RoomActivity;
 import com.anurut.customadapter.helper.ClickAction;
 
 import java.util.ArrayList;
@@ -20,9 +23,11 @@ import java.util.ArrayList;
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
 
     private ArrayList<RoomData> roomData;
+    public Context mContext;
 
-    public RoomAdapter(ArrayList<RoomData> roomData){
+    public RoomAdapter(Context mContext,ArrayList<RoomData> roomData){
         this.roomData = roomData;
+        this.mContext = mContext;
     }
 
     @NonNull
@@ -36,7 +41,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final RoomData myRoomData =  roomData.get(position);
 
         holder.roomIcon.setImageResource(myRoomData.getRoomImageId());
@@ -49,8 +54,18 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
                 Log.d("On Click",v.getTag().toString());
 
                 //MainActivity.mainActivity.onRoomIconClick(v);
-                ClickAction clk = new ClickAction();
-                clk.onRoomIconClick(v,MainActivity.mainActivity);
+//                ClickAction clk = new ClickAction();
+//                clk.onRoomIconClick(v,MainActivity.mainActivity);
+
+                String MSG = "com.anurut.customadapter.ROOMS";
+                Intent intent = new Intent(mContext, RoomActivity.class);
+                String roomName = holder.roomIcon.getTag().toString();
+                MainActivity.mainActivity.buttonTagHold  =  roomName;
+
+                //intent.putExtra(MSG, view.getTag().toString());
+
+                intent.putExtra(MSG,roomName);
+                mContext.startActivity(intent);
             }
         });
     }

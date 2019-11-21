@@ -4,6 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.anurut.customadapter.button.ButtonAdapter;
+import com.anurut.customadapter.button.ButtonData;
+import com.anurut.customadapter.button.ButtonState;
+import com.anurut.customadapter.helper.MqttHelper;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -13,19 +16,32 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.View;
 import android.widget.TextView;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.ArrayList;
+
 public class RoomActivity extends AppCompatActivity {
 
     public RecyclerView recyclerView;
+    public static RoomActivity roomActivity;
+    public RecyclerView.Adapter adapter;
+    public ArrayList<ButtonData> stateArrayList;
     //private Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
+        roomActivity =  this;
 
         //toolbar = findViewById(R.id.room_toolbar);
         //toolbar.setNavigationIcon(R.drawable.ab);
+
+
+        MainActivity.mainActivity.activityStateCheck = 1;
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.MSG);
@@ -37,7 +53,12 @@ public class RoomActivity extends AppCompatActivity {
 
         recyclerView = findViewById(R.id.buttonView);
         recyclerView.setHasFixedSize(true);
-        ButtonAdapter adapter = new ButtonAdapter(Data.getButtonDataArrayList(message), RoomActivity.this);
+
+        stateArrayList =  new ArrayList<>();
+
+        stateArrayList.addAll(Data.getButtonDataArrayList(message));
+
+        adapter = new ButtonAdapter(stateArrayList, RoomActivity.this);
         if(Data.getButtonDataArrayList(message).size() <=2)
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),1));
         else
@@ -48,7 +69,16 @@ public class RoomActivity extends AppCompatActivity {
     }
 
     public void onBackButtonClick(View view){
+        MainActivity.mainActivity.activityStateCheck = 0;
         finish();
     }
+
+    public void refreshData(){
+
+        adapter.notifyDataSetChanged();
+
+    }
+
+
 
 }
