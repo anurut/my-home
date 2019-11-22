@@ -60,13 +60,8 @@ public class MainActivity extends AppCompatActivity {
             public void connectComplete(boolean reconnect, String serverURI) {
                 if (reconnect) {
                     Log.w("mqtt","Reconnected to : "+ serverURI);
-                    //mqttConnectionStatus.setText("Connected Again!");
-                    //syncButtonStates();
-
-
                 } else {
                     Log.w("mqtt: ","Connected to - ClientID: "+ helper.mqttAndroidClient.getClientId()+" "+serverURI);
-                    //mqttConnectionStatus.setText("Connected");
                     syncButtonStates();
                 }
             }
@@ -127,9 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         helper.publishMessage(payload,publishTopic);
 
-        View contextView = findViewById(R.id.mainActivity);
-        Snackbar snackbar = Snackbar.make(contextView,"Button state synced successfully!", Snackbar.LENGTH_LONG);
-        snackbar.show();
+
     }
 
     public void publish(String publishTopic, String currentState){

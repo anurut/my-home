@@ -13,9 +13,6 @@ public class ButtonData {
     private String stateTopic;
     private String roomName;
 
-
-    private ArrayList<ButtonData> data;
-
     public ButtonData(String buttonName, int defaultImageId, int imageIdStateOn,int imageIdStateIdle, String commandTopic, String stateTopic, String roomName , String buttonState){
         this.buttonName = buttonName;
         this.defaultImageId = defaultImageId;

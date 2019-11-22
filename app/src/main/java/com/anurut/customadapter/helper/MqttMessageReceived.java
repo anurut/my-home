@@ -1,12 +1,15 @@
 package com.anurut.customadapter.helper;
 
 import android.util.Log;
+import android.view.View;
 
 import com.anurut.customadapter.Data;
 import com.anurut.customadapter.Interface.CallResponse;
+import com.anurut.customadapter.MainActivity;
 import com.anurut.customadapter.R;
 import com.anurut.customadapter.button.ButtonData;
 import com.anurut.customadapter.room.RoomData;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -164,6 +167,9 @@ public class MqttMessageReceived {
                     throw new IllegalStateException("Unexpected value: " + topic.toLowerCase());
             }
             Data.addToButtonDataMap(roomName, buttonData);//aButtonState.setButtonState(roomName, buttonState);
+            View contextView = MainActivity.mainActivity.findViewById(R.id.mainActivity);
+            Snackbar snackbar = Snackbar.make(contextView,"Button setup successfully!", Snackbar.LENGTH_LONG);
+            snackbar.show();
         }
 
 
