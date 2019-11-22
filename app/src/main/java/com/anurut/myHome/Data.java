@@ -1,24 +1,26 @@
-package com.anurut.customadapter;
+package com.anurut.myHome;
 
 import android.util.Log;
 
-import com.anurut.customadapter.button.ButtonData;
-import com.anurut.customadapter.room.RoomData;
+import com.anurut.myHome.button.ButtonData;
+import com.anurut.myHome.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 public class Data {
 
-    private ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
     private static ArrayList<RoomData> roomDataArrayList = new ArrayList<>();
     private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
+    private static String mqttStatus;
+
 
     public static ArrayList<RoomData> getRoomDataAttayList(){  return roomDataArrayList;    }
+
+    public static String getMqttStatus(){ return mqttStatus; }
+    public static void setMqttStatus(String mqttStatus1){  mqttStatus = mqttStatus1; }
 
     // Returns true if room name already exists in roomDataArrayList
     public static boolean roomAlreadyExist(String roomName){

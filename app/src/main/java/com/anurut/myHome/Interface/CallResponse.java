@@ -1,6 +1,6 @@
-package com.anurut.customadapter.Interface;
+package com.anurut.myHome.Interface;
 
-import com.anurut.customadapter.room.RoomData;
+import com.anurut.myHome.room.RoomData;
 
 import java.util.ArrayList;
 

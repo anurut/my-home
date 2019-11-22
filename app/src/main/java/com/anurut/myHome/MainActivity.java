@@ -1,28 +1,21 @@
-package com.anurut.customadapter;
+package com.anurut.myHome;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
-import android.widget.EditText;
 
-import com.anurut.customadapter.Interface.CallResponse;
-import com.anurut.customadapter.helper.MqttHelper;
-import com.anurut.customadapter.helper.MqttMessageReceived;
-import com.anurut.customadapter.room.RoomAdapter;
-import com.anurut.customadapter.room.RoomData;
-import com.google.android.material.snackbar.Snackbar;
+import com.anurut.myHome.Interface.CallResponse;
+import com.anurut.myHome.helper.MqttHelper;
+import com.anurut.myHome.helper.MqttMessageReceived;
+import com.anurut.myHome.room.RoomAdapter;
+import com.anurut.myHome.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.json.JSONException;
 
 import java.util.ArrayList;
 
@@ -31,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     public MqttHelper helper;
     public RecyclerView recyclerView;
-    public static String MSG = "com.anurut.customadapter.ROOMS";
+    public static String MSG = "com.anurut.myHome.ROOMS";
 
     public static MainActivity mainActivity;
     public int activityStateCheck  = 0;
@@ -60,8 +53,14 @@ public class MainActivity extends AppCompatActivity {
             public void connectComplete(boolean reconnect, String serverURI) {
                 if (reconnect) {
                     Log.w("mqtt","Reconnected to : "+ serverURI);
+                    Data.setMqttStatus("connected");
+                    if (activityStateCheck == 1)
+                        RoomActivity.roomActivity.refreshData();
                 } else {
                     Log.w("mqtt: ","Connected to - ClientID: "+ helper.mqttAndroidClient.getClientId()+" "+serverURI);
+                    Data.setMqttStatus("connected");
+                    if (activityStateCheck == 1)
+                        RoomActivity.roomActivity.refreshData();
                     syncButtonStates();
                 }
             }
@@ -70,8 +69,9 @@ public class MainActivity extends AppCompatActivity {
             public void connectionLost(Throwable cause) {
 
                 Log.w("Connection Lost : ",cause);
-                //mqttConnectionStatus.setText("Disconnected");
-                //setButtonStateDisabled();
+                Data.setMqttStatus("disconnected");
+                if (activityStateCheck == 1)
+                    RoomActivity.roomActivity.refreshData();
             }
 
             @Override
@@ -101,9 +101,8 @@ public class MainActivity extends AppCompatActivity {
                     Log.d("mqtt", "" + e);
                 }
 
-                if (activityStateCheck == 1){
+                if (activityStateCheck == 1)
                     RoomActivity.roomActivity.refreshData();
-                }
 
 
             }
@@ -121,10 +120,10 @@ public class MainActivity extends AppCompatActivity {
         String payload = "";
 
         helper.publishMessage(payload,publishTopic);
-
-
     }
 
+
+    // This method is called in onClick listener of buttonAdapter
     public void publish(String publishTopic, String currentState){
 
         if(currentState.equalsIgnoreCase("ON")){

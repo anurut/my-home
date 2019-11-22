@@ -1,14 +1,14 @@
-package com.anurut.customadapter.helper;
+package com.anurut.myHome.helper;
 
 import android.util.Log;
 import android.view.View;
 
-import com.anurut.customadapter.Data;
-import com.anurut.customadapter.Interface.CallResponse;
-import com.anurut.customadapter.MainActivity;
-import com.anurut.customadapter.R;
-import com.anurut.customadapter.button.ButtonData;
-import com.anurut.customadapter.room.RoomData;
+import com.anurut.myHome.Data;
+import com.anurut.myHome.Interface.CallResponse;
+import com.anurut.myHome.MainActivity;
+import com.anurut.myHome.R;
+import com.anurut.myHome.button.ButtonData;
+import com.anurut.myHome.room.RoomData;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -17,8 +17,8 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-import static com.anurut.customadapter.Data.getRoomDataAttayList;
-import static com.anurut.customadapter.Data.getRoomName;
+import static com.anurut.myHome.Data.getRoomDataAttayList;
+import static com.anurut.myHome.Data.getRoomName;
 
 public class MqttMessageReceived {
 
@@ -133,7 +133,7 @@ public class MqttMessageReceived {
 
                     if (payload.has("POWER2") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER2");
-                        buttonData.add(new ButtonData("night light", R.drawable.power_black_24dp,R.drawable.power_yellow_24dp,R.drawable.power_green_24dp, "cmnd/masterbedroom/POWER2", "stat/masterbedroom/POWER2", roomName, payload.getString("POWER2")));
+                        buttonData.add(new ButtonData("night light", R.drawable.ic_night_lamp_default,R.drawable.ic_night_lamp_on,R.drawable.ic_night_lamp_idle, "cmnd/masterbedroom/POWER2", "stat/masterbedroom/POWER2", roomName, payload.getString("POWER2")));
                     }
 
                     if (payload.has("POWER3") && payload.has("Time")) {
@@ -168,11 +168,9 @@ public class MqttMessageReceived {
             }
             Data.addToButtonDataMap(roomName, buttonData);//aButtonState.setButtonState(roomName, buttonState);
             View contextView = MainActivity.mainActivity.findViewById(R.id.mainActivity);
-            Snackbar snackbar = Snackbar.make(contextView,"Button setup successfully!", Snackbar.LENGTH_LONG);
+            Snackbar snackbar = Snackbar.make(contextView,"Rooms setup successfully!", Snackbar.LENGTH_LONG);
             snackbar.show();
         }
-
-
     }
 
     public void updateButtonState() {

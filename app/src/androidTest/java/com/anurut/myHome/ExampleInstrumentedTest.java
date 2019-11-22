@@ -1,4 +1,4 @@
-package com.anurut.customadapter;
+package com.anurut.myHome;
 
 import android.content.Context;
 
@@ -22,6 +22,6 @@ public class ExampleInstrumentedTest {
         // Context of the app under test.
         Context appContext = InstrumentationRegistry.getInstrumentation().getTargetContext();
 
-        assertEquals("com.anurut.customadapter", appContext.getPackageName());
+        assertEquals("com.anurut.myHome", appContext.getPackageName());
     }
 }

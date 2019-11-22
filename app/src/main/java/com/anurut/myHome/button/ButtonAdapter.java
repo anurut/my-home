@@ -1,4 +1,4 @@
-package com.anurut.customadapter.button;
+package com.anurut.myHome.button;
 
 
 import android.app.Activity;
@@ -6,9 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -16,10 +14,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.recyclerview.widget.RecyclerView.ViewHolder;
 
-import com.anurut.customadapter.MainActivity;
-import com.anurut.customadapter.R;
-import com.anurut.customadapter.RoomActivity;
-import com.anurut.customadapter.helper.MqttHelper;
+import com.anurut.myHome.MainActivity;
+import com.anurut.myHome.R;
+import com.anurut.myHome.RoomActivity;
 
 import java.util.ArrayList;
 
@@ -27,11 +24,13 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
     private ArrayList<ButtonData> buttonData;
     private Activity activity;
+    //private String mqttStatus;
 
     public ButtonAdapter(ArrayList<ButtonData> buttonData, Activity activity){
 
         this.buttonData = buttonData;
         this.activity = activity;
+        //this.mqttStatus = mqttStatus;
     }
 
     @NonNull
@@ -50,12 +49,10 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
         System.out.println("Get Button State :" + mybuttonData.getButtonState());
 
         if (mybuttonData.getButtonState().equalsIgnoreCase("OFF")){
-            //holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.buttonColor));
             holder.constraintLayout.setBackgroundResource(0);
             holder.imageButton.setImageResource(mybuttonData.getDefaultImageId());
         }
         else {
-            //holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
             holder.constraintLayout.setBackgroundResource(R.drawable.button_bg_60);
             holder.imageButton.setImageResource(mybuttonData.getImageIdStateOn());
             //applying animation on fan
@@ -67,10 +64,10 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
         }
 
         holder.textView.setText(mybuttonData.getButtonName());
-        //holder.imageButton.setImageResource(mybuttonData.getButtonImgId());
         holder.imageButton.setTag(mybuttonData.getButtonName());
         holder.textView.setTag(mybuttonData.getButtonName());
         holder.constraintLayout.setTag(mybuttonData.getButtonName());
+
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -96,6 +93,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
         public ImageButton imageButton;
         public TextView textView;
+        public TextView mqttStatus;
         public androidx.constraintlayout.widget.ConstraintLayout constraintLayout;
 
         public MyListViewHolder(@NonNull View itemView) {
@@ -104,6 +102,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
             this.imageButton = itemView.findViewById(R.id.button);
             this.textView = itemView.findViewById(R.id.textView);
             this.constraintLayout = itemView.findViewById(R.id.imageButtonConstraint);
+            this.mqttStatus = itemView.findViewById(R.id.mqttStatus);
         }
     }
 }

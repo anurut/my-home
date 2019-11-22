@@ -1,4 +1,4 @@
-package com.anurut.customadapter.room;
+package com.anurut.myHome.room;
 
 import android.content.Context;
 import android.content.Intent;
@@ -13,10 +13,9 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
-import com.anurut.customadapter.MainActivity;
-import com.anurut.customadapter.R;
-import com.anurut.customadapter.RoomActivity;
-import com.anurut.customadapter.helper.ClickAction;
+import com.anurut.myHome.MainActivity;
+import com.anurut.myHome.R;
+import com.anurut.myHome.RoomActivity;
 
 import java.util.ArrayList;
 
@@ -57,7 +56,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
 //                ClickAction clk = new ClickAction();
 //                clk.onRoomIconClick(v,MainActivity.mainActivity);
 
-                String MSG = "com.anurut.customadapter.ROOMS";
+                String MSG = "com.anurut.myHome.ROOMS";
                 Intent intent = new Intent(mContext, RoomActivity.class);
                 String roomName = holder.roomIcon.getTag().toString();
                 MainActivity.mainActivity.buttonTagHold  =  roomName;

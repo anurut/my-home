@@ -1,4 +1,4 @@
-package com.anurut.customadapter;
+package com.anurut.myHome;
 
 import org.junit.Test;
 

@@ -1,6 +1,4 @@
-package com.anurut.customadapter.button;
-
-import java.util.ArrayList;
+package com.anurut.myHome.button;
 
 public class ButtonData {
 
@@ -10,6 +8,7 @@ public class ButtonData {
     private int imageIdStateIdle;
     private String buttonState;
     private String commandTopic;
+    //private String mqttStatus;
     private String stateTopic;
     private String roomName;
 
@@ -22,6 +21,7 @@ public class ButtonData {
         this.stateTopic = stateTopic;
         this.roomName = roomName;
         this.buttonState = buttonState;
+        //this.mqttStatus = mqttStatus;
     }
 
 
@@ -45,10 +45,16 @@ public class ButtonData {
         this.buttonState = buttonState;
     }
 
-    public String getButtonName(){    return buttonName;    }
+    public String getButtonName(){    return this.buttonName;    }
 
     public void setButtonName(String buttonName){ this.buttonName = buttonName;}
 
-    public String getCommandTopic(){return commandTopic;}
+    public String getCommandTopic(){return this.commandTopic;}
+
+    public void setCommandTopic(String commandTopic){ this.commandTopic = commandTopic;}
+
+//    public String getMqttStatus(){return this.mqttStatus;}
+//
+//    public void setMqttStatus(String mqttStatus){ this.mqttStatus = mqttStatus;}
 
 }

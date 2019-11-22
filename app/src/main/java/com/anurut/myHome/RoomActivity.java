@@ -1,30 +1,27 @@
-package com.anurut.customadapter;
+package com.anurut.myHome;
 
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.anurut.customadapter.button.ButtonAdapter;
-import com.anurut.customadapter.button.ButtonData;
-import com.anurut.customadapter.button.ButtonState;
-import com.anurut.customadapter.helper.MqttHelper;
+import com.anurut.myHome.button.ButtonAdapter;
+import com.anurut.myHome.button.ButtonData;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
 import android.widget.TextView;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-
 import java.util.ArrayList;
+
+import static com.anurut.myHome.Data.getMqttStatus;
 
 public class RoomActivity extends AppCompatActivity {
 
     public RecyclerView recyclerView;
     public static RoomActivity roomActivity;
+    private TextView mqttStatus;
     public RecyclerView.Adapter adapter;
     public ArrayList<ButtonData> stateArrayList;
     //private Toolbar toolbar;
@@ -47,6 +44,9 @@ public class RoomActivity extends AppCompatActivity {
         String message = intent.getStringExtra(MainActivity.MSG);
 
         //ArrayList<ButtonData> buttonData = ;
+
+        mqttStatus = findViewById(R.id.mqttStatus);
+        mqttStatus.setText(Data.getMqttStatus());
 
         TextView header = findViewById(R.id.headerText);
         header.setText(message);
@@ -73,12 +73,6 @@ public class RoomActivity extends AppCompatActivity {
         finish();
     }
 
-    public void refreshData(){
-
-        adapter.notifyDataSetChanged();
-
-    }
-
-
+    public void refreshData(){ adapter.notifyDataSetChanged(); }
 
 }

@@ -1,4 +1,4 @@
-package com.anurut.customadapter.room;
+package com.anurut.myHome.room;
 
 public class RoomData {
 
