@@ -6,16 +6,13 @@ import com.anurut.customadapter.Data;
 import com.anurut.customadapter.Interface.CallResponse;
 import com.anurut.customadapter.R;
 import com.anurut.customadapter.button.ButtonData;
-import com.anurut.customadapter.button.ButtonState;
 import com.anurut.customadapter.room.RoomData;
 
-import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import static com.anurut.customadapter.Data.getRoomDataAttayList;
 import static com.anurut.customadapter.Data.getRoomName;
@@ -128,22 +125,22 @@ public class MqttMessageReceived {
 
                     if (payload.has("POWER1") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER1");
-                        buttonData.add(new ButtonData("tube light", R.drawable.ic_light_bulb_lamp, "cmnd/masterbedroom/POWER1", "stat/masterbedroom/POWER1", roomName, payload.getString("POWER1")));
+                        buttonData.add(new ButtonData("tube light", R.drawable.ic_light_bulb_default,R.drawable.ic_light_bulb_on,R.drawable.ic_light_bulb_idle, "cmnd/masterbedroom/POWER1", "stat/masterbedroom/POWER1", roomName, payload.getString("POWER1")));
                     }
 
                     if (payload.has("POWER2") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER2");
-                        buttonData.add(new ButtonData("night light", R.drawable.power_black_24dp, "cmnd/masterbedroom/POWER2", "stat/masterbedroom/POWER2", roomName, payload.getString("POWER2")));
+                        buttonData.add(new ButtonData("night light", R.drawable.power_black_24dp,R.drawable.power_yellow_24dp,R.drawable.power_green_24dp, "cmnd/masterbedroom/POWER2", "stat/masterbedroom/POWER2", roomName, payload.getString("POWER2")));
                     }
 
                     if (payload.has("POWER3") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER3");
-                        buttonData.add(new ButtonData("ceiling fan", R.drawable.power_black_24dp, "cmnd/masterbedroom/POWER3", "stat/masterbedroom/POWER3", roomName, payload.getString("POWER3")));
+                        buttonData.add(new ButtonData("ceiling fan", R.drawable.ic_fan_default,R.drawable.ic_fan_on,R.drawable.ic_fan_idle, "cmnd/masterbedroom/POWER3", "stat/masterbedroom/POWER3", roomName, payload.getString("POWER3")));
                     }
 
                     if (payload.has("POWER4") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER4");
-                        buttonData.add(new ButtonData("dummy light", R.drawable.ic_light_bulb_lamp, "cmnd/masterbedroom/POWER4", "stat/masterbedroom/POWER4", roomName, payload.getString("POWER4")));
+                        buttonData.add(new ButtonData("dummy light", R.drawable.ic_light_bulb_default,R.drawable.ic_light_bulb_on,R.drawable.ic_light_bulb_idle, "cmnd/masterbedroom/POWER4", "stat/masterbedroom/POWER4", roomName, payload.getString("POWER4")));
                     }
                     break;
                 case "stat/kitchen/result":
@@ -172,7 +169,7 @@ public class MqttMessageReceived {
 
     }
 
-    public void updateButtonState() throws JSONException {
+    public void updateButtonState() {
 
         if (topic.contains("POWER")) {
             switch (topic) {

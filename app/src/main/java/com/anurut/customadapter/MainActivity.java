@@ -80,14 +80,9 @@ public class MainActivity extends AppCompatActivity {
             }
 
             @Override
-            public void messageArrived(String topic, MqttMessage message) throws JSONException {
+            public void messageArrived(String topic, MqttMessage message) {
                 String msgPayload = new String(message.getPayload());
                 Log.w("mqtt","Message arrived!, Topic: "+ topic+ " Payload: " + msgPayload);
-
-
-                if (activityStateCheck == 1){
-                    RoomActivity.roomActivity.refreshData();
-                }
 
                 MqttMessageReceived messageReceived= new MqttMessageReceived(topic, message, new CallResponse() {
                     @Override
@@ -109,6 +104,10 @@ public class MainActivity extends AppCompatActivity {
                     messageReceived.updateButtonState();
                 } catch (Exception e){
                     Log.d("mqtt", "" + e);
+                }
+
+                if (activityStateCheck == 1){
+                    RoomActivity.roomActivity.refreshData();
                 }
 
 

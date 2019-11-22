@@ -6,6 +6,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.view.animation.RotateAnimation;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
@@ -47,15 +50,24 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
         System.out.println("Get Button State :" + mybuttonData.getButtonState());
 
         if (mybuttonData.getButtonState().equalsIgnoreCase("OFF")){
-            holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.buttonColor));
+            //holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.buttonColor));
+            holder.constraintLayout.setBackgroundResource(0);
+            holder.imageButton.setImageResource(mybuttonData.getDefaultImageId());
         }
         else {
-            holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
+            //holder.constraintLayout.setBackgroundColor(activity.getResources().getColor(R.color.colorAccent));
+            holder.constraintLayout.setBackgroundResource(R.drawable.button_bg_60);
+            holder.imageButton.setImageResource(mybuttonData.getImageIdStateOn());
+            //applying animation on fan
+            if(mybuttonData.getButtonName().contains("fan")){
+                holder.imageButton.startAnimation(
+                        AnimationUtils.loadAnimation(RoomActivity.roomActivity,R.anim.rotation)
+                );
+            }
         }
 
-
         holder.textView.setText(mybuttonData.getButtonName());
-        holder.imageButton.setImageResource(mybuttonData.getButtonImgId());
+        //holder.imageButton.setImageResource(mybuttonData.getButtonImgId());
         holder.imageButton.setTag(mybuttonData.getButtonName());
         holder.textView.setTag(mybuttonData.getButtonName());
         holder.constraintLayout.setTag(mybuttonData.getButtonName());
@@ -66,6 +78,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
                 Log.d("On Click",v.getTag().toString());
                 MainActivity.mainActivity.publish(mybuttonData.getCommandTopic(),mybuttonData.getButtonState());
+                holder.imageButton.setImageResource(mybuttonData.getImageIdStateIdle());
             }
         });
 

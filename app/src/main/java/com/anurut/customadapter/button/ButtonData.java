@@ -5,7 +5,9 @@ import java.util.ArrayList;
 public class ButtonData {
 
     private String buttonName;
-    private int buttonId;
+    private int defaultImageId;
+    private int imageIdStateOn;
+    private int imageIdStateIdle;
     private String buttonState;
     private String commandTopic;
     private String stateTopic;
@@ -14,9 +16,11 @@ public class ButtonData {
 
     private ArrayList<ButtonData> data;
 
-    public ButtonData(String buttonName, int buttonImgId, String commandTopic, String stateTopic, String roomName , String buttonState){
+    public ButtonData(String buttonName, int defaultImageId, int imageIdStateOn,int imageIdStateIdle, String commandTopic, String stateTopic, String roomName , String buttonState){
         this.buttonName = buttonName;
-        this.buttonId = buttonImgId;
+        this.defaultImageId = defaultImageId;
+        this.imageIdStateOn = imageIdStateOn;
+        this.imageIdStateIdle = imageIdStateIdle;
         this.commandTopic = commandTopic;
         this.stateTopic = stateTopic;
         this.roomName = roomName;
@@ -24,12 +28,18 @@ public class ButtonData {
     }
 
 
-    public int getButtonId() {
-        return buttonId;
+    public int getDefaultImageId() {
+        return defaultImageId;
     }
 
-    public void setButtonId(int buttonId) {
-        this.buttonId = buttonId;
+    public int getImageIdStateOn() { return imageIdStateOn; }
+
+    public int getImageIdStateIdle() {
+        return imageIdStateIdle;
+    }
+
+    public void setDefaultImageId(int defaultImageId) {
+        this.defaultImageId = defaultImageId;
     }
 
     public String getButtonState() {   return buttonState;    }
@@ -41,10 +51,6 @@ public class ButtonData {
     public String getButtonName(){    return buttonName;    }
 
     public void setButtonName(String buttonName){ this.buttonName = buttonName;}
-
-    public int getButtonImgId(){ return buttonId;}
-
-    public void setButtonImgId(int buttonId){ this.buttonId = buttonId;}
 
     public String getCommandTopic(){return commandTopic;}
 
