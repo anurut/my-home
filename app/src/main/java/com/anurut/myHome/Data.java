@@ -57,6 +57,7 @@ public class Data {
                 break;
             case "masterbathroom":
                 roomName = "master bathroom";
+                break;
             case "guestbedroom":
                 roomName = "guest bedroom";
                 break;

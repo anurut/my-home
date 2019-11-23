@@ -66,7 +66,7 @@ public class MqttMessageReceived {
         // set room name and icon
         switch (roomName.toLowerCase()) {
             case "master bedroom":
-                roomImageId = R.drawable.bedroom_black_24dp;
+                roomImageId = R.drawable.bedroom_img;
 
                 break;
             case "master bathroom":
@@ -79,7 +79,7 @@ public class MqttMessageReceived {
                 roomImageId = R.drawable.bathroom_black_24dp;
                 break;
             case "kitchen":
-                roomImageId = R.drawable.kitchen_black_24dp;
+                roomImageId = R.drawable.kitchen_img;
                 break;
             default:
                 throw new IllegalStateException("Unexpected value: " + roomName.toLowerCase());
@@ -146,7 +146,7 @@ public class MqttMessageReceived {
                         buttonData.add(new ButtonData("dummy light", R.drawable.ic_light_bulb_default,R.drawable.ic_light_bulb_on,R.drawable.ic_light_bulb_idle, "cmnd/masterbedroom/POWER4", "stat/masterbedroom/POWER4", roomName, payload.getString("POWER4")));
                     }
                     break;
-                case "stat/kitchen/result":
+                case "stat/kitchen_img/result":
                     if (payload.has("POWER1")) {
                         //
                     }

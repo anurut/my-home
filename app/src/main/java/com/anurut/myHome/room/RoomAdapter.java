@@ -43,7 +43,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
         final RoomData myRoomData =  roomData.get(position);
 
-        holder.roomIcon.setImageResource(myRoomData.getRoomImageId());
+        holder.roomIcon.setBackgroundResource(myRoomData.getRoomImageId());
         holder.roomIcon.setTag(myRoomData.getRoomName());
         holder.roomName.setText(myRoomData.getRoomName());
         holder.roomIconLayout.setTag(myRoomData.getRoomName());
@@ -52,16 +52,10 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
             public void onClick(View v) {
                 Log.d("On Click",v.getTag().toString());
 
-                //MainActivity.mainActivity.onRoomIconClick(v);
-//                ClickAction clk = new ClickAction();
-//                clk.onRoomIconClick(v,MainActivity.mainActivity);
-
                 String MSG = "com.anurut.myHome.ROOMS";
                 Intent intent = new Intent(mContext, RoomActivity.class);
                 String roomName = holder.roomIcon.getTag().toString();
                 MainActivity.mainActivity.buttonTagHold  =  roomName;
-
-                //intent.putExtra(MSG, view.getTag().toString());
 
                 intent.putExtra(MSG,roomName);
                 mContext.startActivity(intent);
@@ -83,7 +77,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-            this.roomIcon = itemView.findViewById(R.id.room);
+            this.roomIcon = itemView.findViewById(R.id.room_icon);
             this.roomName = itemView.findViewById(R.id.roomTextView);
             this.roomIconLayout=itemView.findViewById(R.id.roomIconConstraint);
         }
