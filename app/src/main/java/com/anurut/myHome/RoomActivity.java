@@ -34,16 +34,11 @@ public class RoomActivity extends AppCompatActivity {
 
         roomActivity =  this;
 
-        //toolbar = findViewById(R.id.room_toolbar);
-        //toolbar.setNavigationIcon(R.drawable.ab);
-
 
         MainActivity.mainActivity.activityStateCheck = 1;
 
         Intent intent = getIntent();
         String message = intent.getStringExtra(MainActivity.MSG);
-
-        //ArrayList<ButtonData> buttonData = ;
 
         mqttStatus = findViewById(R.id.mqttStatus);
         mqttStatus.setText(Data.getMqttStatus());
@@ -73,6 +68,14 @@ public class RoomActivity extends AppCompatActivity {
         finish();
     }
 
-    public void refreshData(){ adapter.notifyDataSetChanged(); }
+
+    // data needs to refresh before adapter refresh
+    public void refreshData(String roomName){
+
+        stateArrayList.clear();
+        stateArrayList.addAll(Data.getButtonDataArrayList(roomName));
+
+        adapter.notifyDataSetChanged();
+    }
 
 }
