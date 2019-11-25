@@ -32,29 +32,29 @@ public class RoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
 
-        roomActivity =  this;
+        roomActivity = this;
 
 
         MainActivity.mainActivity.activityStateCheck = 1;
 
         Intent intent = getIntent();
-        String message = intent.getStringExtra(MainActivity.MSG);
+        String roomName = intent.getStringExtra(MainActivity.MSG);
 
         mqttStatus = findViewById(R.id.mqttStatus);
         mqttStatus.setText(Data.getMqttStatus());
 
         TextView header = findViewById(R.id.headerText);
-        header.setText(message);
+        header.setText(roomName);
 
         recyclerView = findViewById(R.id.buttonView);
         recyclerView.setHasFixedSize(true);
 
         stateArrayList =  new ArrayList<>();
 
-        stateArrayList.addAll(Data.getButtonDataArrayList(message));
+        stateArrayList.addAll(Data.getButtonDataArrayList(roomName));
 
         adapter = new ButtonAdapter(stateArrayList, RoomActivity.this);
-        if(Data.getButtonDataArrayList(message).size() <=2)
+        if(Data.getButtonDataArrayList(roomName).size() <=2)
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),1));
         else
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
