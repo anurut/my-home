@@ -1,19 +1,19 @@
 package com.anurut.myHome;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
 import com.anurut.myHome.Interface.CallResponse;
+import com.anurut.myHome.fragments.MainPage;
+import com.anurut.myHome.fragments.SettingsFragment;
 import com.anurut.myHome.helper.MqttHelper;
 import com.anurut.myHome.helper.MqttMessageReceived;
-import com.anurut.myHome.room.RoomAdapter;
 import com.anurut.myHome.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
@@ -26,8 +26,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     public MqttHelper helper;
-    public RecyclerView recyclerView;
-    public static String MSG = "com.anurut.myHome.ROOMS";
+    public static final String MSG = "com.anurut.myHome.ROOMS";
 
     public static MainActivity mainActivity;
     public int activityStateCheck = 0;
@@ -41,9 +40,14 @@ public class MainActivity extends AppCompatActivity {
 
         startMqtt();
 
-        recyclerView = findViewById(R.id.roomsRecyclerView);
-        recyclerView.setHasFixedSize(true);
+        changeFragment(new MainPage());
+    }
 
+    public void changeFragment(Fragment fragment) {
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
+        fragmentTransaction.commit();
     }
 
     public void startMqtt() {
@@ -57,6 +61,7 @@ public class MainActivity extends AppCompatActivity {
                 if (reconnect) {
                     Log.w("mqtt", "Reconnected to : " + serverURI);
                     Data.setMqttStatus("connected");
+                    syncButtonStates();
                 } else {
                     Log.w("mqtt: ", "Connected to - ClientID: " + helper.mqttAndroidClient.getClientId() + " " + serverURI);
                     Data.setMqttStatus("connected");
@@ -74,7 +79,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void messageArrived(String topic, MqttMessage message) {
                 String msgPayload = new String(message.getPayload());
-                Log.w("mqtt", "Message arrived!, Topic: " + topic + " Payload: " + msgPayload);
+                Log.d("mqtt", "Message arrived!, Topic: " + topic + " Payload: " + msgPayload);
 
                 MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message, new CallResponse() {
                     @Override
@@ -82,13 +87,14 @@ public class MainActivity extends AppCompatActivity {
 
                         System.out.println("Row Count : " + roomData.size());
 
-                        RoomAdapter adapter = new RoomAdapter(MainActivity.this, roomData);
+                        /*RoomAdapter adapter = new RoomAdapter(MainActivity.this, roomData);
                         if (roomData.size() <= 2)
                             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
                         else
                             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(adapter);
+                        recyclerView.setAdapter(adapter);*/
 
+                        MainPage.refreshData();
                     }
                 });
 
@@ -101,7 +107,6 @@ public class MainActivity extends AppCompatActivity {
 
                 if (MainActivity.mainActivity.activityStateCheck == 1)
                     RoomActivity.roomActivity.refreshData(buttonTagHold);
-
 
             }
 
@@ -130,5 +135,12 @@ public class MainActivity extends AppCompatActivity {
             helper.publishMessage("ON", publishTopic);
         }
     }
+
+    public void openSettings(View view) {
+
+        changeFragment(new SettingsFragment());
+
+    }
+
 
 }
