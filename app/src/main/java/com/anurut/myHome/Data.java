@@ -1,5 +1,8 @@
 package com.anurut.myHome;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.util.Log;
 
 import com.anurut.myHome.button.ButtonData;
@@ -118,5 +121,23 @@ public class Data {
             e.printStackTrace();
         }
 
+    }
+
+    public void saveSharedPreferences(Activity activity, String fileName, String key, String value){
+
+        Context context = activity;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName,Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.putString(key, value);
+        editor.apply();
+
+    }
+
+    public String getSharedPreferenceValue(Activity activity, String fileName, String key){
+        Context context = activity;
+        SharedPreferences sharedPreferences = context.getSharedPreferences(fileName,Context.MODE_PRIVATE);
+        String value = sharedPreferences.getString(key,"");
+
+        return value;
     }
 }

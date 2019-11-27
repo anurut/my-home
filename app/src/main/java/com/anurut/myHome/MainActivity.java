@@ -10,8 +10,10 @@ import android.util.Log;
 import android.view.View;
 
 import com.anurut.myHome.Interface.CallResponse;
+import com.anurut.myHome.fragments.DefaultFragment;
 import com.anurut.myHome.fragments.MainPage;
 import com.anurut.myHome.fragments.SettingsFragment;
+import com.anurut.myHome.fragments.SettingsFragmentData;
 import com.anurut.myHome.helper.MqttHelper;
 import com.anurut.myHome.helper.MqttMessageReceived;
 import com.anurut.myHome.room.RoomData;
@@ -37,10 +39,17 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
+        Data data = new Data();
 
-        startMqtt();
+        SettingsFragmentData.setAllMqttDataFromSharedPrefs(MainActivity.this);
 
-        changeFragment(new MainPage());
+        if (data.getSharedPreferenceValue(MainActivity.this, "mqtt", "host").isEmpty()) {
+            changeFragment(new DefaultFragment());
+        } else {
+            changeFragment(new MainPage());
+            startMqtt();
+        }
+
     }
 
     public void changeFragment(Fragment fragment) {

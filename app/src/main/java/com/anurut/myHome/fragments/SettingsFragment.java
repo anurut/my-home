@@ -48,25 +48,45 @@ public class SettingsFragment extends Fragment {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Data data = new Data();
+
                 // Code to save data to shared preferences
                 if (!isAnyFieldEmpty()) {
+
                     setHostURL(host.getText().toString());
-                    setPort(Integer.parseInt(port.getText().toString()));
+                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_host), getHostURL());
+                    setPort(port.getText().toString());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_port), getPort());
                     setUsername(username.getText().toString());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_username), getUsername());
                     setPassword(password.getText().toString());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_password), getPassword());
+                    setClientId(clientId.getText().toString());
+                    data.saveSharedPreferences(getActivity(),"mqtt", getString(R.string.shared_prefs_key_clientid), getClientId());
+
                     if (subTopics.getText().toString().isEmpty()) {
-                        String[] subTopic = {"stat/#", "tele/#"};
+                        String subTopic = "stat/#,tele/#";
                         setSubTopics(subTopic);
+                        data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_subTopics), getSubTopics());
                     } else {
-                        String currentString = subTopics.getText().toString();
-                        String[] subTopic = currentString.split(",");
+
+                        String subTopic = subTopics.getText().toString();
                         setSubTopics(subTopic);
+                        data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_subTopics), getSubTopics());
                     }
 
-                    Log.d("mqtt", "URL: " + getHostURL() + " Port: " + getPort() + " Username: " + getUsername());
+                    Log.d("mqtt", "URL: " + getHostURL() + " Port: " + getPort() + " Username: " + data.getSharedPreferenceValue(getActivity(),"mqtt",getString(R.string.shared_prefs_key_username)));
+
                     Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
 
-                    MainActivity.mainActivity.changeFragment(new MainPage());
+                    //MainActivity.mainActivity.changeFragment(new MainPage());
+
+                    //Restart activities
+                    Intent i = new Intent(getContext(), MainActivity.class);
+                    // set the new task and clear flags
+                    i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(i);
+
                 } else
                     Toast.makeText(getContext(), "Fields can't be left empty", Toast.LENGTH_SHORT).show();
 
@@ -80,8 +100,6 @@ public class SettingsFragment extends Fragment {
                 MainActivity.mainActivity.changeFragment(new MainPage());
             }
         });
-
-
         return view;
     }
 

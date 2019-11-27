@@ -229,7 +229,7 @@
                 android:layout_marginEnd="16dp"
 
                 android:layout_weight="3"
-                android:text="for Tasmota, stat/# and tele/# will do." />
+                android:text="default for Tasmota are 'stat/#' and 'tele/#'" />
         </LinearLayout>
 
     </LinearLayout>

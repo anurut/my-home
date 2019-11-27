@@ -17,13 +17,29 @@
     <string name="Mqtt_auth_header">Authentication</string>
     <string name="Mqtt_subTopic_header">Sub Topics</string>
     <string name="host_address">Host</string>
+    <string name="shared_prefs_key_host">host</string>
     <string name="host_port">Port</string>
+    <string name="shared_prefs_key_port">port</string>
     <string name="client_id">Client Id</string>
+    <string name="shared_prefs_key_clientid">client</string>
     <string name="client_username">Username</string>
+    <string name="shared_prefs_key_username">username</string>
     <string name="client_password">Password</string>
+    <string name="shared_prefs_key_password">password</string>
     <string name="subTopic">Topic</string>
-    <string name="subTopic1">Topic 1</string>
+    <string name="shared_prefs_key_subTopics">subTopics</string>
+
     <string name="ok_button">OK</string>
     <string name="cancel_button">CANCEL</string>
-    
+
+    <!-- Default fragment layout -->
+    <string name="default_fragment_header">Ahoy!</string>
+    <string name="default_text_paragraph">
+        Welcome to \"My Home\" app.\n\nYou are seeing this screen because you have not entered the MQTT broker credentials yet. Please click on the settings icon on top right of this screen to enter MQTT credentials to start.\n\n
+
+        Thank you!\n
+        My Home Team
+
+    </string>
+
 </resources>
