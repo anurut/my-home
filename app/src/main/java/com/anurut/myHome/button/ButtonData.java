@@ -25,6 +25,10 @@ public class ButtonData {
     }
 
 
+    public String getStateTopic() {   return stateTopic;   }
+
+    public void setStateTopic(String stateTopic) {  this.stateTopic = stateTopic;   }
+
     public int getDefaultImageId() {
         return defaultImageId;
     }

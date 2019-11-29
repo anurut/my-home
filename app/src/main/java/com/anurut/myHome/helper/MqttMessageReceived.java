@@ -86,7 +86,6 @@ public class MqttMessageReceived {
         }
 
         if (!Data.roomAlreadyExist(roomName)) {
-
             Data.addToRoomDataArrayList(new RoomData(roomName, roomImageId));
             Log.d("mqtt", "Room added: " + roomName);
         }
@@ -178,16 +177,16 @@ public class MqttMessageReceived {
         if (topic.contains("POWER")) {
             switch (topic) {
                 case "stat/masterbedroom/POWER1":
-                    Data.updateButtonState(topic, message, 0);
+                    Data.updateButtonState(topic, message);
                     break;
                 case "stat/masterbedroom/POWER2":
-                    Data.updateButtonState(topic, message, 1);
+                    Data.updateButtonState(topic, message);
                     break;
                 case "stat/masterbedroom/POWER3":
-                    Data.updateButtonState(topic, message, 2);
+                    Data.updateButtonState(topic, message);
                     break;
                 case "stat/masterbedroom/POWER4":
-                    Data.updateButtonState(topic, message, 3);
+                    Data.updateButtonState(topic, message);
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + topic);
