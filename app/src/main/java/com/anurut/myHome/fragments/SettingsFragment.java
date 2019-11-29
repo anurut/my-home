@@ -79,8 +79,6 @@ public class SettingsFragment extends Fragment {
 
                     Toast.makeText(getContext(), "Successful", Toast.LENGTH_SHORT).show();
 
-                    //MainActivity.mainActivity.changeFragment(new MainPage());
-
                     //Restart activities
                     Intent i = new Intent(getContext(), MainActivity.class);
                     // set the new task and clear flags
@@ -89,7 +87,6 @@ public class SettingsFragment extends Fragment {
 
                 } else
                     Toast.makeText(getContext(), "Fields can't be left empty", Toast.LENGTH_SHORT).show();
-
             }
         });
 
@@ -97,7 +94,13 @@ public class SettingsFragment extends Fragment {
         cancelButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                MainActivity.mainActivity.changeFragment(new MainPage());
+                Data data = new Data();
+
+                if (data.getSharedPreferenceValue(getActivity(), "mqtt", getString(R.string.shared_prefs_key_host)).isEmpty()) {
+                    MainActivity.mainActivity.changeFragment(new DefaultFragment());
+                } else {
+                    MainActivity.mainActivity.changeFragment(new MainPage());
+                }
             }
         });
         return view;
@@ -108,7 +111,8 @@ public class SettingsFragment extends Fragment {
         if (host.getText().toString().isEmpty() ||
                 port.getText().toString().isEmpty() ||
                 username.getText().toString().isEmpty() ||
-                password.getText().toString().isEmpty()
+                password.getText().toString().isEmpty() ||
+                clientId.getText().toString().isEmpty()
         ) {
             return true;
         } else return false;
