@@ -1,15 +1,22 @@
 package com.anurut.myHome;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.os.Environment;
 import android.util.Log;
+
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
 import com.anurut.myHome.button.ButtonData;
 import com.anurut.myHome.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -170,4 +177,5 @@ public class Data {
 
         return sharedPreferences.getString(key, "");
     }
+
 }

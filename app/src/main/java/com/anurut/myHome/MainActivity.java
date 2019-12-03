@@ -1,10 +1,14 @@
 package com.anurut.myHome;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import android.Manifest;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,10 +25,17 @@ import com.anurut.myHome.room.RoomData;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.json.JSONException;
+import org.json.JSONObject;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
+import static com.anurut.myHome.ExternalStorageUtil.readJsonFromFile;
+
 public class MainActivity extends AppCompatActivity {
+
+    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 1;
 
 
     public MqttHelper helper;
@@ -50,7 +61,26 @@ public class MainActivity extends AppCompatActivity {
             startMqtt();
         }
 
+        readJsonFromFile("config.json","config");
+
+
+        //TODO: remove this from here and move it to a class
+        // Check whether this app has write external storage permission or not.
+        int writeExternalStoragePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        // If do not grant write external storage permission.
+        if (writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
+            // Request user to grant write external storage permission.
+            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
+        } else {
+            try {
+                saveDefaultJson();
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
+
 
     public void changeFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -149,6 +179,13 @@ public class MainActivity extends AppCompatActivity {
 
         changeFragment(new SettingsFragment());
 
+    }
+
+    public void saveDefaultJson() throws JSONException {
+        String defaultJson = "{\"Room1\":{\"name\":\"master bedroom\",\"Button1\":{\"name\":\"tube light\",\"command topic\":\"cmnd/master bedroom/POWER1\"}}}";
+
+        JSONObject jsonObject = new JSONObject(defaultJson);
+        ExternalStorageUtil.saveJsonConfigFile(MainActivity.this,"config.json", jsonObject);
     }
 
 
