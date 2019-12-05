@@ -2,6 +2,7 @@ package com.anurut.myHome;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.MediaScannerConnection;
 import android.net.Uri;
 import android.os.Environment;
@@ -21,10 +22,13 @@ import java.io.Writer;
 import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.nio.charset.Charset;
-import java.util.ArrayList;
 import java.util.Iterator;
 
+
+
 public class ExternalStorageUtil {
+
+
 
     // Check whether the external storage is mounted or not.
     public static boolean isExternalStorageMounted() {
@@ -152,12 +156,14 @@ public class ExternalStorageUtil {
         return ret;
     }
 
+    //TODO: Update for Android 10
     //Save json config file to storage
     public static void saveJsonConfigFile(Activity activity, String fileName, JSONObject jsonObject) {
 
         String root = getPublicExternalStorageBaseDir();
-        File myDir = new File(root + File.separator + Constants.CONFIG_DIRECTORY_PATH);
 
+        File myDir = new File(root + File.separator + Constants.CONFIG_DIRECTORY_PATH);
+        Log.d("json", "Save location " + myDir);
         if(!myDir.exists()){
             myDir.mkdirs();
         }
@@ -172,6 +178,7 @@ public class ExternalStorageUtil {
                 output.write(jsonObject.toString());
                 output.flush();
                 output.close();
+                Log.d("json", " Saved");
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             } catch (IOException e) {
@@ -185,11 +192,22 @@ public class ExternalStorageUtil {
                 Log.d("MediaScanner", "Scan Complete" + file.getPath());
             }
         });
+    }
+
+    //for android 10
+
+
+
+
+    private void onActivityResult(int requestCode, int resultCode, Intent resultData){
+
 
 
     }
 
-    //TODO: Setup application from the config json
+
+    //TODO: Change return type to JSONObject from void
+    // Setup application from the config json
     //Read json file from storage
     public static void readJsonFromFile(String fileName, String relativePath) {
 

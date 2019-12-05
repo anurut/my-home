@@ -1,17 +1,18 @@
 package com.anurut.myHome;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+
+import androidx.appcompat.widget.Toolbar;
 
 import com.anurut.myHome.Interface.CallResponse;
 import com.anurut.myHome.fragments.DefaultFragment;
@@ -28,10 +29,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.util.ArrayList;
-
-import static com.anurut.myHome.ExternalStorageUtil.readJsonFromFile;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -44,27 +42,38 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity mainActivity;
     public int activityStateCheck = 0;
     public String buttonTagHold = "";
+    Toolbar toolbar;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
-        Data data = new Data();
 
+
+        // Set toolbar here
+        toolbar = findViewById(R.id.top_bar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle("");
+
+
+        // Get data from shared preferences
+        Data data = new Data();
         SettingsFragmentData.setAllMqttDataFromSharedPrefs(MainActivity.this);
 
-        if (data.getSharedPreferenceValue(MainActivity.this, "mqtt", "host").isEmpty()) {
+        if (data.getSharedPreferenceValue(MainActivity.this, "mqtt", "host").isEmpty() &&
+                data.getSharedPreferenceValue(MainActivity.this, "mqtt", "config").isEmpty()) {
             changeFragment(new DefaultFragment());
         } else {
             changeFragment(new MainPage());
             startMqtt();
         }
 
-        readJsonFromFile("config.json","config");
+        //readJsonFromFile("config.json","config");
 
 
-        //TODO: remove this from here and move it to a class
+        /*//TODO: remove this from here and move it to a class
         // Check whether this app has write external storage permission or not.
         int writeExternalStoragePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
         // If do not grant write external storage permission.
@@ -77,10 +86,36 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }
+        }*/
 
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.settings_menu, menu);
+
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+            case R.id.mqtt_settings:
+                //do something here
+                openMqttSettings();
+                break;
+            /*case R.id.config_settings:
+                //something something
+                break;*/
+
+            default:
+                throw new IllegalStateException("Unexpected value: " + item.getItemId());
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     public void changeFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
@@ -175,17 +210,17 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void openSettings(View view) {
+    public void openMqttSettings() {
 
         changeFragment(new SettingsFragment());
 
     }
 
     public void saveDefaultJson() throws JSONException {
-        String defaultJson = "{\"Room1\":{\"name\":\"master bedroom\",\"Button1\":{\"name\":\"tube light\",\"command topic\":\"cmnd/master bedroom/POWER1\"}}}";
+        String defaultJson = "{\"Room1\":{\"name\":\"master bedroom\",\"type\":\"bedroom\",\"show_image\":true,\"state_topic\":\"tele/masterbedroom/STATE\",\"lwt_topic\":\"tele/masterbedroom/LWT\",\"Button1\":{\"name\":\"tube light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER1\",\"state_topic\":\"stat/masterbedroom/POWER1\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button2\":{\"name\":\"night light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER2\",\"state_topic\":\"stat/masterbedroom/POWER2\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button3\":{\"name\":\"ceiling fan\",\"type\":\"fan\",\"command_topic\":\"cmnd/masterbedroom/POWER3\",\"state_topic\":\"stat/masterbedroom/POWER3\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button4\":{\"name\":\"dummy light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER4\",\"state_topic\":\"stat/masterbedroom/POWER4\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"}}}";
 
         JSONObject jsonObject = new JSONObject(defaultJson);
-        ExternalStorageUtil.saveJsonConfigFile(MainActivity.this,"config.json", jsonObject);
+        ExternalStorageUtil.saveJsonConfigFile(MainActivity.this, "config.json", jsonObject);
     }
 
 
