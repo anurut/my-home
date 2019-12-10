@@ -54,25 +54,25 @@ public class SettingsFragment extends Fragment {
                 if (!isAnyFieldEmpty()) {
 
                     setHostURL(host.getText().toString());
-                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_host), getHostURL());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_host), getHostURL());
                     setPort(port.getText().toString());
-                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_port), getPort());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_port), getPort());
                     setUsername(username.getText().toString());
-                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_username), getUsername());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_username), getUsername());
                     setPassword(password.getText().toString());
-                    data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_password), getPassword());
+                    data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_password), getPassword());
                     setClientId(clientId.getText().toString());
-                    data.saveSharedPreferences(getActivity(),"mqtt", getString(R.string.shared_prefs_key_clientid), getClientId());
+                    data.saveSharedPreferences(getActivity(),"mqtt", getResources().getString(R.string.shared_prefs_key_clientid), getClientId());
 
                     if (subTopics.getText().toString().isEmpty()) {
                         String subTopic = "stat/#,tele/#";
                         setSubTopics(subTopic);
-                        data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_subTopics), getSubTopics());
+                        data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_subTopics), getSubTopics());
                     } else {
 
                         String subTopic = subTopics.getText().toString();
                         setSubTopics(subTopic);
-                        data.saveSharedPreferences(getActivity(), "mqtt", getString(R.string.shared_prefs_key_subTopics), getSubTopics());
+                        data.saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_subTopics), getSubTopics());
                     }
 
                     Log.d("mqtt", "URL: " + getHostURL() + " Port: " + getPort() + " Username: " + data.getSharedPreferenceValue(getActivity(),"mqtt",getString(R.string.shared_prefs_key_username)));

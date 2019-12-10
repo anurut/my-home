@@ -1,5 +1,7 @@
 package com.anurut.myHome.button;
 
+import java.util.ArrayList;
+
 public class ButtonData {
 
     private String buttonName;
@@ -11,8 +13,13 @@ public class ButtonData {
     //private String mqttStatus;
     private String stateTopic;
     private String roomName;
+    private String type;
+    private String payloadON;
+    private String payloadOFF;
+    private static ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
 
-    public ButtonData(String buttonName, int defaultImageId, int imageIdStateOn,int imageIdStateIdle, String commandTopic, String stateTopic, String roomName , String buttonState){
+
+    public ButtonData(String buttonName, String type, int defaultImageId, int imageIdStateOn, int imageIdStateIdle, String commandTopic, String stateTopic, String roomName , String payloadON, String payloadOFF , String buttonState){
         this.buttonName = buttonName;
         this.defaultImageId = defaultImageId;
         this.imageIdStateOn = imageIdStateOn;
@@ -21,8 +28,45 @@ public class ButtonData {
         this.stateTopic = stateTopic;
         this.roomName = roomName;
         this.buttonState = buttonState;
+        this.type = type;
+        this.payloadOFF = payloadOFF;
+        this.payloadON = payloadON;
         //this.mqttStatus = mqttStatus;
     }
+
+    public String getRoomName() {
+        return roomName;
+    }
+
+    public void setRoomName(String roomName) {
+        this.roomName = roomName;
+    }
+
+    public static ArrayList<ButtonData> getButtonDataArrayList() {
+        return buttonDataArrayList;
+    }
+
+    public static void setButtonDataArrayList(ArrayList<ButtonData> buttonDataArrayList) {
+        ButtonData.buttonDataArrayList = buttonDataArrayList;
+    }
+
+    public String getPayloadON() {
+        return payloadON;
+    }
+
+    public void setPayloadON(String payloadON) {
+        this.payloadON = payloadON;
+    }
+
+    public String getPayloadOFF() {
+        return payloadOFF;
+    }
+
+    public void setPayloadOFF(String payloadOFF) {
+        this.payloadOFF = payloadOFF;
+    }
+
+
 
 
     public String getStateTopic() {   return stateTopic;   }

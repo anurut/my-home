@@ -62,31 +62,21 @@ public class MainActivity extends AppCompatActivity {
         Data data = new Data();
         SettingsFragmentData.setAllMqttDataFromSharedPrefs(MainActivity.this);
 
-        if (data.getSharedPreferenceValue(MainActivity.this, "mqtt", "host").isEmpty() &&
-                data.getSharedPreferenceValue(MainActivity.this, "mqtt", "config").isEmpty()) {
+
+        //Show different fragments w.r.t shared pref values
+        if (data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_host)).isEmpty() &&
+                data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config)).isEmpty()) {
             changeFragment(new DefaultFragment());
         } else {
-            changeFragment(new MainPage());
-            startMqtt();
-        }
 
-        //readJsonFromFile("config.json","config");
-
-
-        /*//TODO: remove this from here and move it to a class
-        // Check whether this app has write external storage permission or not.
-        int writeExternalStoragePermission = ContextCompat.checkSelfPermission(MainActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        // If do not grant write external storage permission.
-        if (writeExternalStoragePermission != PackageManager.PERMISSION_GRANTED) {
-            // Request user to grant write external storage permission.
-            ActivityCompat.requestPermissions(MainActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION);
-        } else {
             try {
-                saveDefaultJson();
+                Data.setConfig(new JSONObject(data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-        }*/
+            changeFragment(new MainPage());
+            startMqtt();
+        }
 
     }
 
@@ -155,23 +145,9 @@ public class MainActivity extends AppCompatActivity {
                 String msgPayload = new String(message.getPayload());
                 Log.d("mqtt", "Message arrived!, Topic: " + topic + " Payload: " + msgPayload);
 
-                MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message, new CallResponse() {
-                    @Override
-                    public void getResponse(ArrayList<RoomData> roomData) {
+                MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message);
 
-                        System.out.println("Row Count : " + roomData.size());
-
-                        /*RoomAdapter adapter = new RoomAdapter(MainActivity.this, roomData);
-                        if (roomData.size() <= 2)
-                            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 1));
-                        else
-                            recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(), 2));
-                        recyclerView.setAdapter(adapter);*/
-
-                        MainPage.refreshData();
-                    }
-                });
-
+                MainPage.refreshData();
                 try {
                     messageReceived.updateButtonState();
                 } catch (Exception e) {

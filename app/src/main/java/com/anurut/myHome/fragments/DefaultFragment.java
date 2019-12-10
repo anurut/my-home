@@ -63,7 +63,6 @@ public class DefaultFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/json");
-                //intent.putExtra(Intent.EXTRA_TITLE, "config.json");
 
                 startActivityForResult(intent, SAVE_JSON);
             }
@@ -75,7 +74,6 @@ public class DefaultFragment extends Fragment {
                 Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                 intent.addCategory(Intent.CATEGORY_OPENABLE);
                 intent.setType("application/json");
-                //intent.putExtra(Intent.EXTRA_TITLE, "config.json");
 
                 startActivityForResult(intent, READ_JSON);
             }
@@ -87,20 +85,20 @@ public class DefaultFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if(resultCode == Activity.RESULT_OK){
-            if(requestCode == SAVE_JSON){
-                if(data != null){
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == SAVE_JSON) {
+                if (data != null) {
                     writeFileContent(data.getData());
                     Log.d("json", "JSON file updated");
                 }
             }
-            if(requestCode == CREATE_JSON){
+            if (requestCode == CREATE_JSON) {
                 Log.d("json", "JSON file created");
             }
-            if(requestCode == READ_JSON){
-                if(data != null){
+            if (requestCode == READ_JSON) {
+                if (data != null) {
                     try {
-                        new Data().saveSharedPreferences(getActivity(),"mqtt", "config",readFileContent(data.getData()));
+                        new Data().saveSharedPreferences(getActivity(), "mqtt", getResources().getString(R.string.shared_prefs_key_config), readFileContent(data.getData()));
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
@@ -110,10 +108,9 @@ public class DefaultFragment extends Fragment {
         }
     }
 
-    private void writeFileContent(Uri uri)
-    {
-        try{
-            ParcelFileDescriptor pfd = getContext().getContentResolver().openFileDescriptor(uri,"w");
+    private void writeFileContent(Uri uri) {
+        try {
+            ParcelFileDescriptor pfd = getContext().getContentResolver().openFileDescriptor(uri, "w");
 
             FileOutputStream fileOutputStream =
                     new FileOutputStream(
@@ -127,24 +124,20 @@ public class DefaultFragment extends Fragment {
             pfd.close();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
-            Toast.makeText(getContext(),"File does not exist", Toast.LENGTH_SHORT);
+            Toast.makeText(getContext(), "File does not exist", Toast.LENGTH_SHORT);
         } catch (IOException f) {
             f.printStackTrace();
-            Toast.makeText(getContext(),"File could not be read", Toast.LENGTH_SHORT);
+            Toast.makeText(getContext(), "File could not be read", Toast.LENGTH_SHORT);
         } catch (NullPointerException g) {
             g.printStackTrace();
-            Toast.makeText(getContext(),"Oops!", Toast.LENGTH_SHORT);
+            Toast.makeText(getContext(), "Oops!", Toast.LENGTH_SHORT);
         }
     }
 
-    
     private String readFileContent(Uri uri) throws IOException {
 
-        InputStream inputStream =
-                getContext().getContentResolver().openInputStream(uri);
-        BufferedReader reader =
-                new BufferedReader(new InputStreamReader(
-                        inputStream));
+        InputStream inputStream = getContext().getContentResolver().openInputStream(uri);
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder stringBuilder = new StringBuilder();
         String currentline;
         while ((currentline = reader.readLine()) != null) {

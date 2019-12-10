@@ -62,11 +62,11 @@ public class SettingsFragmentData {
 
         Data data = new Data();
 
-            SettingsFragmentData.hostURL = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_host));
-            SettingsFragmentData.port = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_port));
-            SettingsFragmentData.username = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_username));
-            SettingsFragmentData.password = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_password));
-            SettingsFragmentData.subTopics = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_subTopics));
-            SettingsFragmentData.clientId = data.getSharedPreferenceValue(activity,"mqtt",activity.getString(R.string.shared_prefs_key_clientid));
+            SettingsFragmentData.hostURL = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_host));
+            SettingsFragmentData.port = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_port));
+            SettingsFragmentData.username = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_username));
+            SettingsFragmentData.password = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_password));
+            SettingsFragmentData.subTopics = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_subTopics));
+            SettingsFragmentData.clientId = data.getSharedPreferenceValue(activity,"mqtt",activity.getResources().getString(R.string.shared_prefs_key_clientid));
     }
 }

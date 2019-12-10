@@ -25,32 +25,32 @@ public class MqttMessageReceived {
     private MqttMessage message;
     private String topic;
     // private JSONObject payload;
-    public CallResponse callResponse;
+    //public CallResponse callResponse;
 
 
-    public MqttMessageReceived(String topic, MqttMessage message, CallResponse callResponse) {
+    public MqttMessageReceived(String topic, MqttMessage message) {
 
         try {
             this.message = message;
             this.topic = topic;
-            this.callResponse = callResponse;
+            //this.callResponse = callResponse;
 
 
             String payload = message.toString();
 
             if (topic.contains("tele") && payload.toLowerCase().equals("online")) {
-                setRooms(topic);
+                //TODO: enable room icon w.r.t "topic"
+                //setRooms(topic);
 
             }
             if (topic.contains("tele") && payload.toLowerCase().equals("offline")) {
-                deleteRoom(topic);
+                //TODO: Disable room icon w.r.t "topic"
+                //deleteRoom(topic);
             }
 
-            if (topic.contains("stat") && topic.contains("RESULT"))
-                setRoomButtons(topic, this.message);
+            /*if (topic.contains("stat") && topic.contains("RESULT"))
+                setRoomButtons(topic, this.message);*/
 
-        } catch (JSONException e) {
-            e.printStackTrace();
         } catch (Exception m) {
             m.printStackTrace();
         }
@@ -59,7 +59,7 @@ public class MqttMessageReceived {
 
     private void setRooms(String topic) {
 
-        String room_name;
+/*        String room_name;
         String roomName = getRoomName(topic);
         int roomImageId;
 
@@ -90,8 +90,10 @@ public class MqttMessageReceived {
             Log.d("mqtt", "Room added: " + roomName);
         }
 
-        callResponse.getResponse(getRoomDataAttayList());
+        //callResponse.getResponse(getRoomDataAttayList());*/
     }
+
+
 
     private void deleteRoom(String topic) {
 
@@ -105,12 +107,12 @@ public class MqttMessageReceived {
             Log.d("mqtt", "Rooms remained: " + getRoomDataAttayList().toString());
         }
 
-        callResponse.getResponse(getRoomDataAttayList());
+        //callResponse.getResponse(getRoomDataAttayList());
     }
 
     private void setRoomButtons(String topic, MqttMessage message) throws JSONException {
 
-        String messageString = message.toString();
+      /*  String messageString = message.toString();
         JSONObject payload = new JSONObject();
 
         if (messageString.contains("{")) {
@@ -127,7 +129,7 @@ public class MqttMessageReceived {
 
                     if (payload.has("POWER1") && payload.has("Time")) {
                         Log.d("mqtt", "Setting up POWER1");
-                        buttonData.add(new ButtonData("tube light", R.drawable.ic_light_bulb_default,R.drawable.ic_light_bulb_on,R.drawable.ic_light_bulb_idle, "cmnd/masterbedroom/POWER1", "stat/masterbedroom/POWER1", roomName, payload.getString("POWER1")));
+                        buttonData.add(new ButtonData("tube light", "cmnd/masterbedroom/POWER1", "stat/masterbedroom/POWER1", roomName, payload.getString("POWER1")));
                     }
 
                     if (payload.has("POWER2") && payload.has("Time")) {
@@ -169,8 +171,10 @@ public class MqttMessageReceived {
             View contextView = MainActivity.mainActivity.findViewById(R.id.mainActivity);
             Snackbar snackbar = Snackbar.make(contextView,"Rooms setup successfully!", Snackbar.LENGTH_LONG);
             snackbar.show();
-        }
+        }*/
     }
+
+
 
     public void updateButtonState() {
 
