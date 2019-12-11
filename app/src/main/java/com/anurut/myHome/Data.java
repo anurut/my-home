@@ -17,6 +17,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 public class Data {
 
@@ -24,8 +25,17 @@ public class Data {
     private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
     private static String mqttStatus;
     private static JSONObject config;
+
+
+
+
+
     public static ArrayList<RoomData> getRoomDataAttayList() {
         return roomDataArrayList;
+    }
+
+    public static void setRoomDataArrayList(ArrayList<RoomData> roomDataArrayList) {
+        Data.roomDataArrayList = roomDataArrayList;
     }
 
     public static JSONObject getConfig() {
@@ -98,7 +108,7 @@ public class Data {
 
 
     //TODO: Continue from here ...
-    public String roomNameFromJson(String topic) throws JSONException {
+    public static String getRoomNameFromJson(String topic) throws JSONException {
 
         JSONObject jsonObject = Data.getConfig();
 
@@ -141,6 +151,7 @@ public class Data {
     public void setupRoomsData(JSONObject room) throws JSONException {
 
         int roomImageId = 0;
+
         int numberOfButtons = room.length();
         ArrayList<ButtonData> buttonData = new ArrayList<>();
         String roomName = room.getString("name");
@@ -178,6 +189,7 @@ public class Data {
         }
 
         for(int i=0; i<numberOfButtons; i++){
+            if(room.has("Button"+(i+1)))
             buttonData.add(setupRoomButtons(room.getJSONObject("Button"+(i+1)), roomName));
         }
 
@@ -239,10 +251,10 @@ public class Data {
         return 0;
     }
 
-    private static int getRoomButtonIndex(String topic) {
+    private static int getRoomButtonIndex(String topic) throws JSONException {
 
         ButtonData buttonData;
-        String roomName = getRoomName(topic);
+        String roomName = getRoomNameFromJson(topic);
         ArrayList<ButtonData> buttonDataArrayList = getButtonDataArrayList(roomName);
 
         if (!(buttonDataArrayList.size() == 0)) {
@@ -270,7 +282,8 @@ public class Data {
     public static void updateButtonState(String topic, MqttMessage message) {
 
         try {
-            String roomName = getRoomName(topic);
+            //String roomName = getRoomName(topic);
+            String roomName = Data.getRoomNameFromJson(topic);
             int index = getRoomButtonIndex(topic);
             //String key = getPayloadKey(topic);
 

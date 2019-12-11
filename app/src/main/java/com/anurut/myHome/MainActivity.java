@@ -14,7 +14,6 @@ import android.view.MenuItem;
 
 import androidx.appcompat.widget.Toolbar;
 
-import com.anurut.myHome.Interface.CallResponse;
 import com.anurut.myHome.fragments.DefaultFragment;
 import com.anurut.myHome.fragments.MainPage;
 import com.anurut.myHome.fragments.SettingsFragment;
@@ -30,6 +29,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -71,6 +71,11 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Data.setConfig(new JSONObject(data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))));
+                int numberOfRooms = Data.getConfig().length();
+                for(int i=0; i<numberOfRooms; i++){
+                    data.setupRoomsData(Data.getConfig().getJSONObject("Room"+(i+1)));
+                }
+
             } catch (JSONException e) {
                 e.printStackTrace();
             }
