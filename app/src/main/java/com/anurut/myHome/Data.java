@@ -120,7 +120,7 @@ public class Data {
                 JSONObject buttonJson = roomJson.getJSONObject("Button"+(j+1));
                 String buttonTopic = buttonJson.getString("state_topic");
                 if(buttonTopic.equalsIgnoreCase(topic)){
-                    Log.d("mqtt", "Room Name : " + roomName);
+                    Log.d("mqtt", "Room Name from JSON: " + roomName);
                     return roomName;
                 }
             }

@@ -20,7 +20,6 @@ import com.anurut.myHome.fragments.SettingsFragment;
 import com.anurut.myHome.fragments.SettingsFragmentData;
 import com.anurut.myHome.helper.MqttHelper;
 import com.anurut.myHome.helper.MqttMessageReceived;
-import com.anurut.myHome.room.RoomData;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -28,12 +27,8 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
-
 
 public class MainActivity extends AppCompatActivity {
-
-    private static final int REQUEST_CODE_WRITE_EXTERNAL_STORAGE_PERMISSION = 1;
 
 
     public MqttHelper helper;
@@ -70,10 +65,14 @@ public class MainActivity extends AppCompatActivity {
         } else {
 
             try {
-                Data.setConfig(new JSONObject(data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))));
-                int numberOfRooms = Data.getConfig().length();
-                for(int i=0; i<numberOfRooms; i++){
-                    data.setupRoomsData(Data.getConfig().getJSONObject("Room"+(i+1)));
+                Data.setConfig(new JSONObject(
+                                data.getSharedPreferenceValue(
+                                        MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))
+                        )
+                );
+
+                for (int i = 0; i < Data.getConfig().length(); i++) {
+                    data.setupRoomsData(Data.getConfig().getJSONObject("Room" + (i + 1)));
                 }
 
             } catch (JSONException e) {
@@ -153,11 +152,11 @@ public class MainActivity extends AppCompatActivity {
                 MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message);
 
                 MainPage.refreshData();
-                try {
+                /*try {
                     messageReceived.updateButtonState();
                 } catch (Exception e) {
                     Log.d("mqtt", "" + e);
-                }
+                }*/
 
 
                 if (MainActivity.mainActivity.activityStateCheck == 1)

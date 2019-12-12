@@ -16,6 +16,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 import static com.anurut.myHome.Data.getRoomDataAttayList;
 import static com.anurut.myHome.Data.getRoomName;
@@ -24,7 +25,7 @@ public class MqttMessageReceived {
 
     private MqttMessage message;
     private String topic;
-    // private JSONObject payload;
+    private JSONObject payload;
     //public CallResponse callResponse;
 
 
@@ -33,20 +34,21 @@ public class MqttMessageReceived {
         try {
             this.message = message;
             this.topic = topic;
-            //this.callResponse = callResponse;
+
+            String payloadStr = message.toString();
 
 
-            String payload = message.toString();
-
-            if (topic.contains("tele") && payload.toLowerCase().equals("online")) {
+            if (topic.contains("tele") && payloadStr.toLowerCase().equals("online")) {
                 //TODO: enable room icon w.r.t "topic"
                 //setRooms(topic);
 
             }
-            if (topic.contains("tele") && payload.toLowerCase().equals("offline")) {
+            if (topic.contains("tele") && payloadStr.toLowerCase().equals("offline")) {
                 //TODO: Disable room icon w.r.t "topic"
                 //deleteRoom(topic);
             }
+
+            updateButtonState(topic, payloadStr);
 
             /*if (topic.contains("stat") && topic.contains("RESULT"))
                 setRoomButtons(topic, this.message);*/
@@ -92,7 +94,6 @@ public class MqttMessageReceived {
 
         //callResponse.getResponse(getRoomDataAttayList());*/
     }
-
 
 
     private void deleteRoom(String topic) {
@@ -175,29 +176,28 @@ public class MqttMessageReceived {
     }
 
 
+    public void updateButtonState(String topic, String payloadStr) throws JSONException {
 
-    public void updateButtonState() {
+        if (payloadStr.contains("{"))
+            payload = new JSONObject(payloadStr);
 
         if (topic.contains("POWER")) {
-            switch (topic) {
-                case "stat/masterbedroom/POWER1":
-                    Data.updateButtonState(topic, message);
-                    break;
-                case "stat/masterbedroom/POWER2":
-                    Data.updateButtonState(topic, message);
-                    break;
-                case "stat/masterbedroom/POWER3":
-                    Data.updateButtonState(topic, message);
-                    break;
-                case "stat/masterbedroom/POWER4":
-                    Data.updateButtonState(topic, message);
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + topic);
-            }
+            Data.updateButtonState(topic, message);
         }
 
-
+        if (topic.contains("stat") && topic.contains("RESULT") && payload.has("Time")) {
+            Iterator iterator = payload.keys();
+            while (iterator.hasNext()) {
+                String key = (String) iterator.next();
+                Log.d("Key : ", key);
+                if (key.contains("POWER")) {
+                    String newTopic = topic.replace("RESULT", key);
+                    MqttMessage pMessage = new MqttMessage();
+                    pMessage.setPayload(payload.getString(key).getBytes());
+                    Data.updateButtonState(newTopic, pMessage);
+                }
+            }
+        }
     }
 
 }
