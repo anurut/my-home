@@ -52,6 +52,11 @@ public class MainPage extends Fragment {
         return view;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        refreshMqttStatus();
+    }
 
     public static void refreshMqttStatus(){
         mqttStatus.setText(Data.getMqttStatus());
