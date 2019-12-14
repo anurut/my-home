@@ -10,7 +10,7 @@
     <string name="new_titleText">bedroom</string>
     <string name="title_activity_room">room</string>
 
-    <string name="mainHeader">Welcome</string>
+    <string name="mainHeader">My Home</string>
 
     <!-- Mqtt Broker Connection Layout -->
     <string name="Mqtt_setup_header">Mqtt Setup</string>

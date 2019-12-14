@@ -56,6 +56,7 @@ public class MainPage extends Fragment {
     public void onResume() {
         super.onResume();
         refreshMqttStatus();
+        refreshData();
     }
 
     public static void refreshMqttStatus(){
