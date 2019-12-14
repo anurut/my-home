@@ -45,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
-
+        MainPage mainPage = new MainPage();
 
         // Set toolbar here
         toolbar = findViewById(R.id.top_bar);
@@ -122,6 +122,7 @@ public class MainActivity extends AppCompatActivity {
 
         //mqttConnectionStatus = findViewById(R.id.mqttStatus);
 
+
         helper = new MqttHelper(getApplicationContext());
         helper.setCallback(new MqttCallbackExtended() {
             @Override
@@ -129,10 +130,12 @@ public class MainActivity extends AppCompatActivity {
                 if (reconnect) {
                     Log.w("mqtt", "Reconnected to : " + serverURI);
                     Data.setMqttStatus("connected");
+                    MainPage.refreshMqttStatus();
                     syncButtonStates();
                 } else {
                     Log.w("mqtt: ", "Connected to - ClientID: " + helper.mqttAndroidClient.getClientId() + " " + serverURI);
                     Data.setMqttStatus("connected");
+                    MainPage.refreshMqttStatus();
                     syncButtonStates();
                 }
             }
@@ -142,6 +145,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.w("Connection Lost : ", cause);
                 Data.setMqttStatus("disconnected");
+               // new MainPage().refreshMqttStatus();
+                Data data=Data.getInstance();
             }
 
             @Override

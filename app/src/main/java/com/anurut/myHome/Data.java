@@ -21,14 +21,35 @@ import java.util.Iterator;
 
 public class Data {
 
+
+
+    String roomUp;
+
+    public static Data data=null;
+
+    public  static Data getInstance(){
+
+        if(null==data){
+            data= new Data();
+        }
+
+
+        return data;
+    }
+
+
+    public String getRoomUp() {
+        return roomUp;
+    }
+
+    public void setRoomUp(String roomUp) {
+        this.roomUp = roomUp;
+    }
+
     private static ArrayList<RoomData> roomDataArrayList = new ArrayList<>();
     private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
     private static String mqttStatus;
     private static JSONObject config;
-
-
-
-
 
     public static ArrayList<RoomData> getRoomDataAttayList() {
         return roomDataArrayList;
@@ -46,7 +67,7 @@ public class Data {
         Data.config = config;
     }
 
-    static String getMqttStatus() {
+    public static String getMqttStatus() {
         return mqttStatus;
     }
 
@@ -77,49 +98,19 @@ public class Data {
         Data.roomDataArrayList.remove(Data.getRoomNameIndex(roomName));
     }
 
-    public static String getRoomName(String topic) {
-        // TODO: change below code to take room name from user
-        //Initial code, now changed to take room name from user
-        String roomName;
-        String[] separated = topic.split("/");
-        String room_name = separated[1];
 
-        switch (room_name) {
-            case "masterbedroom":
-                roomName = "master bedroom";
-                break;
-            case "masterbathroom":
-                roomName = "master bathroom";
-                break;
-            case "guestbedroom":
-                roomName = "guest bedroom";
-                break;
-            case "guestbathroom":
-                roomName = "guest bathroom";
-                break;
-            case "kitchen":
-                roomName = "kitchen";
-                break;
-            default:
-                throw new IllegalStateException("Unexpected value: " + room_name);
-        }
-        return roomName;
-    }
-
-
-    //TODO: Continue from here ...
     public static String getRoomNameFromJson(String topic) throws JSONException {
 
         JSONObject jsonObject = Data.getConfig();
 
-        for(int i=0; i<jsonObject.length(); i++){
-            JSONObject roomJson = jsonObject.getJSONObject("Room"+(i+1));
+        for (int i = 0; i < jsonObject.length(); i++) {
+            JSONObject roomJson = jsonObject.getJSONObject("Room" + (i + 1));
             String roomName = roomJson.getString("name");
 
-            for(int j=0; j<roomJson.length(); j++){
-                JSONObject buttonJson = roomJson.getJSONObject("Button"+(j+1));
+            for (int j = 0; j < roomJson.length(); j++) {
+                JSONObject buttonJson = roomJson.getJSONObject("Button" + (j + 1));
                 String buttonTopic = buttonJson.getString("state_topic");
-                if(buttonTopic.equalsIgnoreCase(topic)){
+                if (buttonTopic.equalsIgnoreCase(topic)) {
                     Log.d("mqtt", "Room Name from JSON: " + roomName);
                     return roomName;
                 }
@@ -141,8 +132,8 @@ public class Data {
         JSONObject configJson = new JSONObject(config);
         int jsonLength = configJson.length();
 
-        for(int i=0; i<jsonLength; i++){
-            setupRoomsData(configJson.getJSONObject("Room"+(i+1)));
+        for (int i = 0; i < jsonLength; i++) {
+            setupRoomsData(configJson.getJSONObject("Room" + (i + 1)));
         }
     }
 
@@ -159,21 +150,21 @@ public class Data {
         // set room name and icon
         switch (room.getString("type")) {
             case "bedroom":
-                if(room.getBoolean("show_image")){
+                if (room.getBoolean("show_image")) {
                     roomImageId = R.drawable.bedroom_img;
                 } else {
                     roomImageId = R.drawable.bedroom_black_24dp;
                 }
                 break;
             case "bathroom":
-                if(room.getBoolean("show_image")){
+                if (room.getBoolean("show_image")) {
                     //roomImageId = R.drawable.bathroom_black_24dp;
-                }else {
+                } else {
                     roomImageId = R.drawable.bathroom_black_24dp;
                 }
                 break;
             case "kitchen":
-                if(room.getBoolean("show_image")){
+                if (room.getBoolean("show_image")) {
                     roomImageId = R.drawable.kitchen_img;
                 } else {
                     roomImageId = R.drawable.kitchen_black_24dp;
@@ -184,18 +175,18 @@ public class Data {
         }
 
         if (!Data.roomAlreadyExist(roomName)) {
-            Data.addToRoomDataArrayList(new RoomData(roomName,roomImageId,room.getString("type"), room.getString("state_topic"), room.getString("lwt_topic")));
+            Data.addToRoomDataArrayList(new RoomData(roomName, roomImageId, room.getString("type"), room.getString("state_topic"), room.getString("lwt_topic")));
             Log.d("mqtt", "Room added: " + roomName);
         }
 
-        for(int i=0; i<numberOfButtons; i++){
-            if(room.has("Button"+(i+1)))
-            buttonData.add(setupRoomButtons(room.getJSONObject("Button"+(i+1)), roomName));
+        for (int i = 0; i < numberOfButtons; i++) {
+            if (room.has("Button" + (i + 1)))
+                buttonData.add(setupRoomButtons(room.getJSONObject("Button" + (i + 1)), roomName));
         }
 
         Data.addToButtonDataMap(roomName, buttonData);//aButtonState.setButtonState(roomName, buttonState);
         View contextView = MainActivity.mainActivity.findViewById(R.id.mainActivity);
-        Snackbar snackbar = Snackbar.make(contextView,"Rooms setup successfully!", Snackbar.LENGTH_LONG);
+        Snackbar snackbar = Snackbar.make(contextView, "Rooms setup successfully!", Snackbar.LENGTH_LONG);
         snackbar.show();
     }
 
@@ -207,34 +198,37 @@ public class Data {
         int imageIdStateOn = 0;
         int imageIdStateIdle = 0;
 
-
-        if(!buttons.getString("type").isEmpty() || !(buttons.getString("type") == null)) {
-            switch (buttons.getString("type").toLowerCase()){
-                case "light":
-                    defaultImgId = R.drawable.ic_light_bulb_default;
-                    imageIdStateOn = R.drawable.ic_light_bulb_on;
-                    imageIdStateIdle = R.drawable.ic_light_bulb_idle;
-                    break;
-                case "fan":
-                    defaultImgId = R.drawable.ic_fan_default;
-                    imageIdStateOn = R.drawable.ic_fan_on;
-                    imageIdStateIdle = R.drawable.ic_fan_idle;
-                    break;
-                case "night light":
-                    defaultImgId = R.drawable.ic_night_lamp_default;
-                    imageIdStateOn = R.drawable.ic_night_lamp_on;
-                    imageIdStateIdle = R.drawable.ic_night_lamp_idle;
-                    break;
-                default:
-                    defaultImgId = R.drawable.power_black_24dp;
-                    imageIdStateOn = R.drawable.power_yellow_24dp;
-                    imageIdStateIdle = R.drawable.power_green_24dp;
-            }
+        switch (buttons.getString("type").toLowerCase()) {
+            case "light":
+                defaultImgId = R.drawable.ic_light_bulb_default;
+                imageIdStateOn = R.drawable.ic_light_bulb_on;
+                imageIdStateIdle = R.drawable.ic_light_bulb_idle;
+                break;
+            case "fan":
+                defaultImgId = R.drawable.ic_fan_default;
+                imageIdStateOn = R.drawable.ic_fan_on;
+                imageIdStateIdle = R.drawable.ic_fan_idle;
+                break;
+            case "night light":
+                defaultImgId = R.drawable.ic_night_lamp_default;
+                imageIdStateOn = R.drawable.ic_night_lamp_on;
+                imageIdStateIdle = R.drawable.ic_night_lamp_idle;
+                break;
+            case "water heater":
+                defaultImgId = R.drawable.ic_water_heater_default;
+                imageIdStateOn = R.drawable.ic_water_heater_on;
+                imageIdStateIdle = R.drawable.ic_water_heater_idle;
+                break;
+            default:
+                defaultImgId = R.drawable.power_black_24dp;
+                imageIdStateOn = R.drawable.power_yellow_24dp;
+                imageIdStateIdle = R.drawable.power_green_24dp;
         }
 
-        return new ButtonData(buttonName, buttons.getString("type"),defaultImgId,imageIdStateOn,imageIdStateIdle,
-                buttons.getString("command_topic"),buttons.getString("state_topic"),roomName,buttons.getString("payload_on"),
-                buttons.getString("payload_off"),"");
+
+        return new ButtonData(buttonName, buttons.getString("type"), defaultImgId, imageIdStateOn, imageIdStateIdle,
+                buttons.getString("command_topic"), buttons.getString("state_topic"), roomName, buttons.getString("payload_on"),
+                buttons.getString("payload_off"), "");
     }
 
 
@@ -263,7 +257,6 @@ public class Data {
                 if (buttonData.getStateTopic().equalsIgnoreCase(topic)) return i;
             }
         }
-
         return -1;
     }
 
@@ -279,13 +272,12 @@ public class Data {
         return Data.buttonDataMap.get(roomName);
     }
 
+
     public static void updateButtonState(String topic, MqttMessage message) {
 
         try {
-            //String roomName = getRoomName(topic);
             String roomName = Data.getRoomNameFromJson(topic);
             int index = getRoomButtonIndex(topic);
-            //String key = getPayloadKey(topic);
 
             if (index != -1) {
                 Log.d("mqtt", "Button State before update " + Data.buttonDataMap.get(roomName).get(index).getButtonName() + " " + Data.buttonDataMap.get(roomName).get(index).getButtonState());
@@ -301,6 +293,7 @@ public class Data {
 
     }
 
+    //Save shared preference to device memory
     public void saveSharedPreferences(Activity activity, String fileName, String key, String value) {
 
         SharedPreferences sharedPreferences = activity.getSharedPreferences(fileName, Context.MODE_PRIVATE);
@@ -310,6 +303,7 @@ public class Data {
 
     }
 
+    //Fetch shared preference from device memory
     public String getSharedPreferenceValue(Activity activity, String fileName, String key) {
 
         SharedPreferences sharedPreferences = activity.getSharedPreferences(fileName, Context.MODE_PRIVATE);

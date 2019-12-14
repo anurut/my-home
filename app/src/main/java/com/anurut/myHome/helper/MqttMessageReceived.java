@@ -1,25 +1,17 @@
 package com.anurut.myHome.helper;
 
 import android.util.Log;
-import android.view.View;
 
 import com.anurut.myHome.Data;
-import com.anurut.myHome.Interface.CallResponse;
-import com.anurut.myHome.MainActivity;
-import com.anurut.myHome.R;
-import com.anurut.myHome.button.ButtonData;
-import com.anurut.myHome.room.RoomData;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.Iterator;
 
 import static com.anurut.myHome.Data.getRoomDataAttayList;
-import static com.anurut.myHome.Data.getRoomName;
+import static com.anurut.myHome.Data.getRoomNameFromJson;
 
 public class MqttMessageReceived {
 
@@ -56,7 +48,6 @@ public class MqttMessageReceived {
         } catch (Exception m) {
             m.printStackTrace();
         }
-        //updateButtonState();
     }
 
     private void setRooms(String topic) {
@@ -96,9 +87,9 @@ public class MqttMessageReceived {
     }
 
 
-    private void deleteRoom(String topic) {
+    private void deleteRoom(String topic) throws JSONException {
 
-        String roomName = getRoomName(topic);
+        String roomName = getRoomNameFromJson(topic);
 
         if (Data.roomAlreadyExist(roomName)) {
 

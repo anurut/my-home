@@ -12,18 +12,21 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.anurut.myHome.Data;
 import com.anurut.myHome.R;
 import com.anurut.myHome.room.RoomAdapter;
 import com.anurut.myHome.room.RoomData;
 
+import java.security.PublicKey;
 import java.util.ArrayList;
 
 public class MainPage extends Fragment {
     RecyclerView recyclerView;
    public static RecyclerView.Adapter adapter;
    public static ArrayList<RoomData> roomDataArraylist;
+   private static TextView mqttStatus;
 
 
     @Override
@@ -33,6 +36,8 @@ public class MainPage extends Fragment {
         recyclerView = view.findViewById(R.id.roomsRecyclerView);
         recyclerView.setHasFixedSize(true);
 
+        mqttStatus = view.findViewById(R.id.mqtt_status);
+        mqttStatus.setText("Connecting");
 
         roomDataArraylist = new ArrayList<>();
         roomDataArraylist.addAll(Data.getRoomDataAttayList());
@@ -44,13 +49,15 @@ public class MainPage extends Fragment {
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
 
-
         return view;
     }
 
 
-    public static void refreshData(){
+    public static void refreshMqttStatus(){
+        mqttStatus.setText(Data.getMqttStatus());
+    }
 
+    public static void refreshData(){
         roomDataArraylist.clear();
         roomDataArraylist.addAll(Data.getRoomDataAttayList());
         adapter.notifyDataSetChanged();

@@ -41,7 +41,6 @@
         android:id="@+id/mqttStatus"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:fontFamily="@font/roboto_light"
         android:text="@string/mqtt_status_text"
         android:textSize="12sp"
         app:fontFamily="@font/roboto_light"
