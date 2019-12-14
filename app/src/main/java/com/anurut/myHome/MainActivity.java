@@ -30,7 +30,6 @@ import org.json.JSONObject;
 
 public class MainActivity extends AppCompatActivity {
 
-
     public MqttHelper helper;
     public static final String MSG = "com.anurut.myHome.ROOMS";
 
@@ -45,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mainActivity = this;
-        MainPage mainPage = new MainPage();
 
         // Set toolbar here
         toolbar = findViewById(R.id.top_bar);
@@ -66,22 +64,19 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 Data.setConfig(new JSONObject(
-                                data.getSharedPreferenceValue(
-                                        MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))
+                                data.getSharedPreferenceValue(MainActivity.this, "mqtt", getResources().getString(R.string.shared_prefs_key_config))
                         )
                 );
 
                 for (int i = 0; i < Data.getConfig().length(); i++) {
                     data.setupRoomsData(Data.getConfig().getJSONObject("Room" + (i + 1)));
                 }
-
             } catch (JSONException e) {
                 e.printStackTrace();
             }
             changeFragment(new MainPage());
             startMqtt();
         }
-
     }
 
     @Override
@@ -120,8 +115,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void startMqtt() {
 
-        //mqttConnectionStatus = findViewById(R.id.mqttStatus);
-
 
         helper = new MqttHelper(getApplicationContext());
         helper.setCallback(new MqttCallbackExtended() {
@@ -145,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.w("Connection Lost : ", cause);
                 Data.setMqttStatus("disconnected");
-               // new MainPage().refreshMqttStatus();
-                Data data=Data.getInstance();
+                MainPage.refreshMqttStatus();
             }
 
             @Override
@@ -157,12 +149,6 @@ public class MainActivity extends AppCompatActivity {
                 MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message);
 
                 MainPage.refreshData();
-                /*try {
-                    messageReceived.updateButtonState();
-                } catch (Exception e) {
-                    Log.d("mqtt", "" + e);
-                }*/
-
 
                 if (MainActivity.mainActivity.activityStateCheck == 1)
                     RoomActivity.roomActivity.refreshData(buttonTagHold);
@@ -200,13 +186,4 @@ public class MainActivity extends AppCompatActivity {
         changeFragment(new SettingsFragment());
 
     }
-
-    public void saveDefaultJson() throws JSONException {
-        String defaultJson = "{\"Room1\":{\"name\":\"master bedroom\",\"type\":\"bedroom\",\"show_image\":true,\"state_topic\":\"tele/masterbedroom/STATE\",\"lwt_topic\":\"tele/masterbedroom/LWT\",\"Button1\":{\"name\":\"tube light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER1\",\"state_topic\":\"stat/masterbedroom/POWER1\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button2\":{\"name\":\"night light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER2\",\"state_topic\":\"stat/masterbedroom/POWER2\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button3\":{\"name\":\"ceiling fan\",\"type\":\"fan\",\"command_topic\":\"cmnd/masterbedroom/POWER3\",\"state_topic\":\"stat/masterbedroom/POWER3\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"},\"Button4\":{\"name\":\"dummy light\",\"type\":\"light\",\"command_topic\":\"cmnd/masterbedroom/POWER4\",\"state_topic\":\"stat/masterbedroom/POWER4\",\"payload_on\":\"ON\",\"payload_off\":\"OFF\"}}}";
-
-        JSONObject jsonObject = new JSONObject(defaultJson);
-        ExternalStorageUtil.saveJsonConfigFile(MainActivity.this, "config.json", jsonObject);
-    }
-
-
 }

@@ -20,13 +20,13 @@ import com.anurut.myHome.RoomActivity;
 
 import java.util.ArrayList;
 
-public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListViewHolder>{
+public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListViewHolder> {
 
     private ArrayList<ButtonData> buttonData;
     private Activity activity;
     //private String mqttStatus;
 
-    public ButtonAdapter(ArrayList<ButtonData> buttonData, Activity activity){
+    public ButtonAdapter(ArrayList<ButtonData> buttonData, Activity activity) {
 
         this.buttonData = buttonData;
         this.activity = activity;
@@ -38,50 +38,63 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
     public MyListViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
         LayoutInflater layoutInflater = LayoutInflater.from(activity);
-        View listItem = layoutInflater.inflate(R.layout.mqtt_button_layout,parent,false);
-        MyListViewHolder viewHolder = new MyListViewHolder(listItem);
-        return viewHolder;
+        View listItem = layoutInflater.inflate(R.layout.mqtt_button_layout, parent, false);
+        return new MyListViewHolder(listItem);
     }
 
     @Override
     public void onBindViewHolder(@NonNull final MyListViewHolder holder, int position) {
-        final ButtonData mybuttonData = buttonData.get(position);
-        System.out.println("Get Button State :" + mybuttonData.getButtonState());
+        final ButtonData myButtonData = buttonData.get(position);
+        System.out.println("Get Button State :" + myButtonData.getButtonState());
 
-        if (mybuttonData.getButtonState().equalsIgnoreCase("OFF")){
-            holder.constraintLayout.setBackgroundResource(0);
-            holder.imageButton.setImageResource(mybuttonData.getDefaultImageId());
-        }
-        else {
-            holder.constraintLayout.setBackgroundResource(R.drawable.button_bg_60);
-            holder.imageButton.setImageResource(mybuttonData.getImageIdStateOn());
-            //applying animation on fan
-            if(mybuttonData.getButtonName().contains("fan")){
-                holder.imageButton.startAnimation(
-                        AnimationUtils.loadAnimation(RoomActivity.roomActivity,R.anim.rotation)
-                );
-            }
+        switch (myButtonData.getButtonState().toLowerCase()) {
+            case "off":
+                holder.buttonName.setText(myButtonData.getButtonName());
+                holder.constraintLayout.setBackgroundResource(0);
+                holder.imageButton.setImageResource(myButtonData.getDefaultImageId());
+                break;
+            case "offline":
+                holder.imageButton.setEnabled(false);
+                holder.buttonName.setText(R.string.button_unavailable);
+                break;
+            case "online":
+                holder.imageButton.setEnabled(true);
+                holder.buttonName.setText(myButtonData.getButtonName());
+                break;
+            case "on":
+                holder.buttonName.setText(myButtonData.getButtonName());
+                holder.constraintLayout.setBackgroundResource(R.drawable.button_bg_60);
+                holder.imageButton.setImageResource(myButtonData.getImageIdStateOn());
+                //applying animation on fan
+                if (myButtonData.getButtonName().contains("fan")) {
+                    holder.imageButton.startAnimation(
+                            AnimationUtils.loadAnimation(RoomActivity.roomActivity, R.anim.rotation)
+                    );
+                }
+                break;
+            default:
+                Log.d("mqtt", "Waiting for button state update");
+                holder.buttonName.setText(myButtonData.getButtonName());
+                holder.constraintLayout.setBackgroundResource(0);
+                holder.imageButton.setImageResource(myButtonData.getDefaultImageId());
+                break;
         }
 
-        holder.textView.setText(mybuttonData.getButtonName());
-        holder.imageButton.setTag(mybuttonData.getButtonName());
-        holder.textView.setTag(mybuttonData.getButtonName());
-        holder.constraintLayout.setTag(mybuttonData.getButtonName());
+        holder.imageButton.setTag(myButtonData.getButtonName());
+        holder.buttonName.setTag(myButtonData.getButtonName());
+        holder.constraintLayout.setTag(myButtonData.getButtonName());
 
 
         holder.imageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Log.d("On Click",v.getTag().toString());
-                MainActivity.mainActivity.publish(mybuttonData.getCommandTopic(),mybuttonData.getButtonState());
-                holder.imageButton.setImageResource(mybuttonData.getImageIdStateIdle());
+                Log.d("On Click", v.getTag().toString());
+                MainActivity.mainActivity.publish(myButtonData.getCommandTopic(), myButtonData.getButtonState());
+                holder.imageButton.setImageResource(myButtonData.getImageIdStateIdle());
             }
         });
-
-
     }
-
 
 
     @Override
@@ -92,7 +105,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
     class MyListViewHolder extends ViewHolder {
 
         public ImageButton imageButton;
-        public TextView textView;
+        public TextView buttonName;
         public TextView mqttStatus;
         public androidx.constraintlayout.widget.ConstraintLayout constraintLayout;
 
@@ -100,7 +113,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
             super(itemView);
 
             this.imageButton = itemView.findViewById(R.id.button);
-            this.textView = itemView.findViewById(R.id.textView);
+            this.buttonName = itemView.findViewById(R.id.textView);
             this.constraintLayout = itemView.findViewById(R.id.imageButtonConstraint);
             this.mqttStatus = itemView.findViewById(R.id.mqttStatus);
         }

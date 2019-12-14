@@ -44,6 +44,15 @@ public class SettingsFragment extends Fragment {
         clientId = view.findViewById(R.id.editText_clientId);
         subTopics = view.findViewById(R.id.editText_subTopic);
 
+        Data data = new Data();
+        if(!data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_host)).isEmpty()){
+            host.setText(data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_host)));
+            port.setText(data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_port)));
+            username.setText(data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_username)));
+            clientId.setText(data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_clientid)));
+            subTopics.setText(data.getSharedPreferenceValue(getActivity(),"mqtt",getResources().getString(R.string.shared_prefs_key_subTopics)));
+        }
+
         okButton = view.findViewById(R.id.ok_btn);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override

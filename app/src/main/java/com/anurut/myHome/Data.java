@@ -17,66 +17,29 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
+import java.util.Objects;
 
 public class Data {
-
-
-
-    String roomUp;
-
-    public static Data data=null;
-
-    public  static Data getInstance(){
-
-        if(null==data){
-            data= new Data();
-        }
-
-
-        return data;
-    }
-
-
-    public String getRoomUp() {
-        return roomUp;
-    }
-
-    public void setRoomUp(String roomUp) {
-        this.roomUp = roomUp;
-    }
 
     private static ArrayList<RoomData> roomDataArrayList = new ArrayList<>();
     private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
     private static String mqttStatus;
     private static JSONObject config;
 
-    public static ArrayList<RoomData> getRoomDataAttayList() {
-        return roomDataArrayList;
-    }
+    public static ArrayList<RoomData> getRoomDataAttayList() {  return roomDataArrayList;  }
 
-    public static void setRoomDataArrayList(ArrayList<RoomData> roomDataArrayList) {
-        Data.roomDataArrayList = roomDataArrayList;
-    }
+    public static void setRoomDataArrayList(ArrayList<RoomData> roomDataArrayList) { Data.roomDataArrayList = roomDataArrayList;  }
 
-    public static JSONObject getConfig() {
-        return config;
-    }
+    static JSONObject getConfig() { return config;  }
 
-    public static void setConfig(JSONObject config) {
-        Data.config = config;
-    }
+    static void setConfig(JSONObject config) {   Data.config = config;  }
 
-    public static String getMqttStatus() {
-        return mqttStatus;
-    }
+    public static String getMqttStatus() { return mqttStatus;  }
 
-    static void setMqttStatus(String mqttStatus) {
-        Data.mqttStatus = mqttStatus;
-    }
+    static void setMqttStatus(String mqttStatus) {  Data.mqttStatus = mqttStatus;   }
 
     // Returns true if room name already exists in roomDataArrayList
-    public static boolean roomAlreadyExist(String roomName) {
+    private static boolean roomAlreadyExist(String roomName) {
 
         RoomData roomData;
 
@@ -89,57 +52,10 @@ public class Data {
         return false;
     }
 
-
-    public static void addToRoomDataArrayList(RoomData roomData) {
-        Data.roomDataArrayList.add(roomData);
-    }
-
-    public static void deleteRoomDataFromArrayList(String roomName) {
-        Data.roomDataArrayList.remove(Data.getRoomNameIndex(roomName));
-    }
-
-
-    public static String getRoomNameFromJson(String topic) throws JSONException {
-
-        JSONObject jsonObject = Data.getConfig();
-
-        for (int i = 0; i < jsonObject.length(); i++) {
-            JSONObject roomJson = jsonObject.getJSONObject("Room" + (i + 1));
-            String roomName = roomJson.getString("name");
-
-            for (int j = 0; j < roomJson.length(); j++) {
-                JSONObject buttonJson = roomJson.getJSONObject("Button" + (j + 1));
-                String buttonTopic = buttonJson.getString("state_topic");
-                if (buttonTopic.equalsIgnoreCase(topic)) {
-                    Log.d("mqtt", "Room Name from JSON: " + roomName);
-                    return roomName;
-                }
-            }
-        }
-        return "";
-    }
-
-    public static String getPayloadKey(String topic) {
-
-        String currentString = topic;
-        String[] separated = currentString.split("/");
-        String payloadKey = separated[2];
-        return payloadKey;
-    }
-
-
-    public void setupRooms(String config) throws JSONException {
-        JSONObject configJson = new JSONObject(config);
-        int jsonLength = configJson.length();
-
-        for (int i = 0; i < jsonLength; i++) {
-            setupRoomsData(configJson.getJSONObject("Room" + (i + 1)));
-        }
-    }
-
+    private static void addToRoomDataArrayList(RoomData roomData) {  Data.roomDataArrayList.add(roomData);   }
 
     //Takes input from config.json and sets up Room Icons
-    public void setupRoomsData(JSONObject room) throws JSONException {
+    void setupRoomsData(JSONObject room) throws JSONException {
 
         int roomImageId = 0;
 
@@ -175,7 +91,7 @@ public class Data {
         }
 
         if (!Data.roomAlreadyExist(roomName)) {
-            Data.addToRoomDataArrayList(new RoomData(roomName, roomImageId, room.getString("type"), room.getString("state_topic"), room.getString("lwt_topic")));
+            Data.addToRoomDataArrayList(new RoomData(roomName, roomImageId, room.getString("type")));
             Log.d("mqtt", "Room added: " + roomName);
         }
 
@@ -190,13 +106,12 @@ public class Data {
         snackbar.show();
     }
 
-
     private ButtonData setupRoomButtons(JSONObject buttons, String roomName) throws JSONException {
 
         String buttonName = buttons.getString("name");
-        int defaultImgId = 0;
-        int imageIdStateOn = 0;
-        int imageIdStateIdle = 0;
+        int defaultImgId ;
+        int imageIdStateOn ;
+        int imageIdStateIdle ;
 
         switch (buttons.getString("type").toLowerCase()) {
             case "light":
@@ -228,69 +143,51 @@ public class Data {
 
         return new ButtonData(buttonName, buttons.getString("type"), defaultImgId, imageIdStateOn, imageIdStateIdle,
                 buttons.getString("command_topic"), buttons.getString("state_topic"), roomName, buttons.getString("payload_on"),
-                buttons.getString("payload_off"), "");
+                buttons.getString("payload_off"), "",buttons.getString("lwt_topic"),buttons.getString("lwt_available"),
+                buttons.getString("lwt_unavailable"));
     }
 
-
-    private static int getRoomNameIndex(String roomName) {
-
-        RoomData roomData;
-
-        if (!(roomDataArrayList.size() == 0)) {
-            for (int i = 0; i < roomDataArrayList.size(); i++) {
-                roomData = roomDataArrayList.get(i);
-                if (roomData.getRoomName().equals(roomName.toLowerCase())) return i;
-            }
-        }
-        return 0;
-    }
-
-    private static int getRoomButtonIndex(String topic) throws JSONException {
-
-        ButtonData buttonData;
-        String roomName = getRoomNameFromJson(topic);
-        ArrayList<ButtonData> buttonDataArrayList = getButtonDataArrayList(roomName);
-
-        if (!(buttonDataArrayList.size() == 0)) {
-            for (int i = 0; i < buttonDataArrayList.size(); i++) {
-                buttonData = buttonDataArrayList.get(i);
-                if (buttonData.getStateTopic().equalsIgnoreCase(topic)) return i;
-            }
-        }
-        return -1;
-    }
-
-
-    public static void addToButtonDataMap(String roomName, ArrayList<ButtonData> buttonData) {
+    private static void addToButtonDataMap(String roomName, ArrayList<ButtonData> buttonData) {
 
         Data.buttonDataMap.put(roomName, buttonData);
-        Log.d("mqtt", Data.buttonDataMap.get(roomName).get(0).getButtonName());
     }
 
-    public static ArrayList<ButtonData> getButtonDataArrayList(String roomName) {
+    static ArrayList<ButtonData> getButtonDataArrayList(String roomName) {
         Log.d("mqtt", "Button Data Size " + Data.buttonDataMap.get(roomName).size());
         return Data.buttonDataMap.get(roomName);
     }
 
-
     public static void updateButtonState(String topic, MqttMessage message) {
 
-        try {
-            String roomName = Data.getRoomNameFromJson(topic);
-            int index = getRoomButtonIndex(topic);
 
-            if (index != -1) {
-                Log.d("mqtt", "Button State before update " + Data.buttonDataMap.get(roomName).get(index).getButtonName() + " " + Data.buttonDataMap.get(roomName).get(index).getButtonState());
-                Data.buttonDataMap.get(roomName).get(index).setButtonState(message.toString());
-                Log.d("mqtt", "Button State after update " + Data.buttonDataMap.get(roomName).get(index).getButtonName() + " " + Data.buttonDataMap.get(roomName).get(index).getButtonState());
-            } else {
-                throw new Exception("Could not get index of button topic: " + topic);
+        try{
+
+            JSONObject jsonObject = Data.getConfig();
+
+            for (int i = 0; i < jsonObject.length(); i++) {
+                JSONObject roomJson = jsonObject.getJSONObject("Room" + (i + 1));
+                String roomName = roomJson.getString("name");
+
+                for (int j = 0; j < roomJson.length(); j++) {
+
+                    JSONObject buttonJson = roomJson.getJSONObject("Button" + (j + 1));
+                    String buttonStateTopic = buttonJson.getString("state_topic");
+                    String lwtTopic = buttonJson.getString("lwt_topic");
+
+                    if (topic.equalsIgnoreCase(buttonStateTopic) || topic.equalsIgnoreCase(lwtTopic)) {
+                        Log.d("mqtt", "Button State before update " + Objects.requireNonNull(Data.buttonDataMap.get(roomName)).get(j).getButtonName() + " " +
+                                Data.buttonDataMap.get(roomName).get(j).getButtonState());
+
+                        Data.buttonDataMap.get(roomName).get(j).setButtonState(message.toString());
+
+                        Log.d("mqtt", "Button State after update " + Objects.requireNonNull(Data.buttonDataMap.get(roomName)).get(j).getButtonName() + " " +
+                                Data.buttonDataMap.get(roomName).get(j).getButtonState());
+                    }
+                }
             }
-
-        } catch (Exception e) {
+        } catch (JSONException e) {
             e.printStackTrace();
         }
-
     }
 
     //Save shared preference to device memory

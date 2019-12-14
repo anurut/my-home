@@ -16,8 +16,6 @@ import android.widget.TextView;
 
 import java.util.ArrayList;
 
-import static com.anurut.myHome.Data.getMqttStatus;
-
 public class RoomActivity extends AppCompatActivity {
 
     public RecyclerView recyclerView;
@@ -25,7 +23,6 @@ public class RoomActivity extends AppCompatActivity {
     private TextView mqttStatus;
     public RecyclerView.Adapter adapter;
     public ArrayList<ButtonData> stateArrayList;
-    //private Toolbar toolbar;
 
 
     @Override
@@ -33,9 +30,7 @@ public class RoomActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_room);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
-
         roomActivity = this;
-
 
         MainActivity.mainActivity.activityStateCheck = 1;
 
@@ -62,7 +57,6 @@ public class RoomActivity extends AppCompatActivity {
             recyclerView.setLayoutManager(new GridLayoutManager(getApplicationContext(),2));
 
         recyclerView.setAdapter(adapter);
-
     }
 
     public void onBackButtonClick(View view){

@@ -42,5 +42,6 @@
         My Home Team
 
     </string>
+    <string name="button_unavailable">unavailable</string>
 
 </resources>

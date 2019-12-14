@@ -16,10 +16,16 @@ public class ButtonData {
     private String type;
     private String payloadON;
     private String payloadOFF;
+    private String lwtTopic;
+    private String lwt_available;
+    private String lwt_unavailable;
     private static ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
 
 
-    public ButtonData(String buttonName, String type, int defaultImageId, int imageIdStateOn, int imageIdStateIdle, String commandTopic, String stateTopic, String roomName , String payloadON, String payloadOFF , String buttonState){
+    public ButtonData(String buttonName, String type, int defaultImageId, int imageIdStateOn, int imageIdStateIdle,
+                      String commandTopic, String stateTopic, String roomName , String payloadON, String payloadOFF ,
+                      String buttonState, String lwtTopic, String lwt_available, String lwt_unavailable){
+
         this.buttonName = buttonName;
         this.defaultImageId = defaultImageId;
         this.imageIdStateOn = imageIdStateOn;
@@ -31,7 +37,9 @@ public class ButtonData {
         this.type = type;
         this.payloadOFF = payloadOFF;
         this.payloadON = payloadON;
-        //this.mqttStatus = mqttStatus;
+        this.lwtTopic = lwtTopic;
+        this.lwt_available = lwt_available;
+        this.lwt_unavailable = lwt_unavailable;
     }
 
     public String getRoomName() {
@@ -65,9 +73,6 @@ public class ButtonData {
     public void setPayloadOFF(String payloadOFF) {
         this.payloadOFF = payloadOFF;
     }
-
-
-
 
     public String getStateTopic() {   return stateTopic;   }
 

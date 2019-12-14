@@ -10,13 +10,12 @@ public class RoomData {
     private String lwtTopic;
 
 
-    public RoomData(String roomName, int roomImageId, String type, String stateTopic, String lwtTopic) {
+    public RoomData(String roomName, int roomImageId, String type) {
         this.roomName = roomName;
         this.roomImageId = roomImageId;
         this.type = type;
         //this.showImage = showImage;
-        this.stateTopic = stateTopic;
-        this.lwtTopic = lwtTopic;
+        //this.stateTopic = stateTopic;
     }
 
     public String getStateTopic() {
