@@ -15,12 +15,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.anurut.myHome.RoomActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/AppTheme.NoActionBar"
-            android:parentActivityName="com.anurut.myHome.MainActivity">
-        </activity>
-        <activity
             android:name="com.anurut.myHome.MainActivity"
             android:screenOrientation="portrait">
             <intent-filter>

@@ -7,8 +7,9 @@ import android.util.Log;
 import android.view.View;
 
 
-import com.anurut.myHome.button.ButtonData;
-import com.anurut.myHome.room.RoomData;
+import com.anurut.myHome.fragments.RoomViewModel;
+import com.anurut.myHome.model.Button;
+import com.anurut.myHome.model.Room;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
@@ -21,14 +22,14 @@ import java.util.Objects;
 
 public class Data {
 
-    private static ArrayList<RoomData> roomDataArrayList = new ArrayList<>();
-    private static HashMap<String, ArrayList<ButtonData>> buttonDataMap = new HashMap<>();
+    private static ArrayList<Room> roomArrayList = new ArrayList<>();
+    private static HashMap<String, ArrayList<Button>> buttonDataMap = new HashMap<>();
     private static String mqttStatus;
     private static JSONObject config;
 
-    public static ArrayList<RoomData> getRoomDataAttayList() {  return roomDataArrayList;  }
+    public static ArrayList<Room> getRoomDataAttayList() {  return roomArrayList;  }
 
-    public static void setRoomDataArrayList(ArrayList<RoomData> roomDataArrayList) { Data.roomDataArrayList = roomDataArrayList;  }
+    public static void setRoomArrayList(ArrayList<Room> roomArrayList) { Data.roomArrayList = roomArrayList;  }
 
     static JSONObject getConfig() { return config;  }
 
@@ -38,21 +39,21 @@ public class Data {
 
     static void setMqttStatus(String mqttStatus) {  Data.mqttStatus = mqttStatus;   }
 
-    // Returns true if room name already exists in roomDataArrayList
+    // Returns true if room name already exists in roomArrayList
     private static boolean roomAlreadyExist(String roomName) {
 
-        RoomData roomData;
+        Room room;
 
-        if (!(roomDataArrayList.size() == 0)) {
-            for (int i = 0; i < roomDataArrayList.size(); i++) {
-                roomData = roomDataArrayList.get(i);
-                if (roomData.getRoomName().equals(roomName.toLowerCase())) return true;
+        if (!(roomArrayList.size() == 0)) {
+            for (int i = 0; i < roomArrayList.size(); i++) {
+                room = roomArrayList.get(i);
+                if (room.getRoomName().equals(roomName.toLowerCase())) return true;
             }
         }
         return false;
     }
 
-    private static void addToRoomDataArrayList(RoomData roomData) {  Data.roomDataArrayList.add(roomData);   }
+    private static void addToRoomDataArrayList(Room room) {  Data.roomArrayList.add(room);   }
 
     //Takes input from config.json and sets up Room Icons
     void setupRoomsData(JSONObject room) throws JSONException {
@@ -60,7 +61,7 @@ public class Data {
         int roomImageId = 0;
 
         int numberOfButtons = room.length();
-        ArrayList<ButtonData> buttonData = new ArrayList<>();
+        ArrayList<Button> buttonData = new ArrayList<>();
         String roomName = room.getString("name");
 
         // set room name and icon
@@ -91,7 +92,7 @@ public class Data {
         }
 
         if (!Data.roomAlreadyExist(roomName)) {
-            Data.addToRoomDataArrayList(new RoomData(roomName, roomImageId, room.getString("type")));
+            Data.addToRoomDataArrayList(new Room(roomName, roomImageId, room.getString("type")));
             Log.d("mqtt", "Room added: " + roomName);
         }
 
@@ -100,13 +101,19 @@ public class Data {
                 buttonData.add(setupRoomButtons(room.getJSONObject("Button" + (i + 1)), roomName));
         }
 
+       /* MainViewModel mainViewModel = new MainViewModel();
+        mainViewModel.setRoomDataArraylist(Data.getRoomDataAttayList());*/
+
         Data.addToButtonDataMap(roomName, buttonData);//aButtonState.setButtonState(roomName, buttonState);
         View contextView = MainActivity.mainActivity.findViewById(R.id.mainActivity);
         Snackbar snackbar = Snackbar.make(contextView, "Rooms setup successfully!", Snackbar.LENGTH_LONG);
         snackbar.show();
+
+        RoomViewModel.setButtonArrayList(Data.getButtonDataArrayList(roomName));
+
     }
 
-    private ButtonData setupRoomButtons(JSONObject buttons, String roomName) throws JSONException {
+    private Button setupRoomButtons(JSONObject buttons, String roomName) throws JSONException {
 
         String buttonName = buttons.getString("name");
         int defaultImgId ;
@@ -141,18 +148,18 @@ public class Data {
         }
 
 
-        return new ButtonData(buttonName, buttons.getString("type"), defaultImgId, imageIdStateOn, imageIdStateIdle,
+        return new Button(buttonName, buttons.getString("type"), defaultImgId, imageIdStateOn, imageIdStateIdle,
                 buttons.getString("command_topic"), buttons.getString("state_topic"), roomName, buttons.getString("payload_on"),
                 buttons.getString("payload_off"), "",buttons.getString("lwt_topic"),buttons.getString("lwt_available"),
                 buttons.getString("lwt_unavailable"));
     }
 
-    private static void addToButtonDataMap(String roomName, ArrayList<ButtonData> buttonData) {
+    private static void addToButtonDataMap(String roomName, ArrayList<Button> buttonData) {
 
         Data.buttonDataMap.put(roomName, buttonData);
     }
 
-    static ArrayList<ButtonData> getButtonDataArrayList(String roomName) {
+    public static ArrayList<Button> getButtonDataArrayList(String roomName) {
         Log.d("mqtt", "Button Data Size " + Data.buttonDataMap.get(roomName).size());
         return Data.buttonDataMap.get(roomName);
     }
@@ -179,6 +186,7 @@ public class Data {
                                 Data.buttonDataMap.get(roomName).get(j).getButtonState());
 
                         Data.buttonDataMap.get(roomName).get(j).setButtonState(message.toString());
+                        RoomViewModel.setButtonArrayList(Data.buttonDataMap.get(roomName));
 
                         Log.d("mqtt", "Button State after update " + Objects.requireNonNull(Data.buttonDataMap.get(roomName)).get(j).getButtonName() + " " +
                                 Data.buttonDataMap.get(roomName).get(j).getButtonState());

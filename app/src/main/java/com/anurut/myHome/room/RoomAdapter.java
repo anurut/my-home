@@ -1,7 +1,5 @@
 package com.anurut.myHome.room;
 
-import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,18 +13,19 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.anurut.myHome.MainActivity;
 import com.anurut.myHome.R;
-import com.anurut.myHome.RoomActivity;
+import com.anurut.myHome.fragments.RoomFragment;
+import com.anurut.myHome.model.Room;
 
 import java.util.ArrayList;
 
 public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
 
-    private ArrayList<RoomData> roomData;
-    public Context mContext;
+    private ArrayList<Room> roomData;
+    //public Context mContext;
 
-    public RoomAdapter(Context mContext,ArrayList<RoomData> roomData){
+    public RoomAdapter(ArrayList<Room> roomData){
         this.roomData = roomData;
-        this.mContext = mContext;
+        //this.mContext = mContext;
     }
 
     @NonNull
@@ -41,24 +40,28 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final RoomData myRoomData =  roomData.get(position);
+        final Room myRoom =  roomData.get(position);
 
-        holder.roomIcon.setBackgroundResource(myRoomData.getRoomImageId());
-        holder.roomIcon.setTag(myRoomData.getRoomName());
-        holder.roomName.setText(myRoomData.getRoomName());
-        holder.roomIconLayout.setTag(myRoomData.getRoomName());
+        holder.roomIcon.setBackgroundResource(myRoom.getRoomImageId());
+        holder.roomIcon.setTag(myRoom.getRoomName());
+        holder.roomName.setText(myRoom.getRoomName());
+        holder.roomIconLayout.setTag(myRoom.getRoomName());
         holder.roomIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.d("On Click",v.getTag().toString());
 
-                String MSG = "com.anurut.myHome.ROOMS";
-                Intent intent = new Intent(mContext, RoomActivity.class);
+                //String MSG = "com.anurut.myHome.ROOMS";
+                //Intent intent = new Intent(mContext, RoomActivity.class);
+                //Intent intent = new Intent(mContext, MainFragment.class);
                 String roomName = holder.roomIcon.getTag().toString();
-                MainActivity.mainActivity.buttonTagHold  =  roomName;
 
-                intent.putExtra(MSG,roomName);
-                mContext.startActivity(intent);
+
+                //MainActivity.mainActivity.buttonTagHold  =  roomName;
+
+                //intent.putExtra(MSG,roomName);
+                //mContext.startActivity(intent);
+                MainActivity.mainActivity.changeFragment(new RoomFragment(), roomName);
             }
         });
     }

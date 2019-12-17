@@ -106,9 +106,9 @@ public class SettingsFragment extends Fragment {
                 Data data = new Data();
 
                 if (data.getSharedPreferenceValue(getActivity(), "mqtt", getString(R.string.shared_prefs_key_host)).isEmpty()) {
-                    MainActivity.mainActivity.changeFragment(new DefaultFragment());
+                    MainActivity.mainActivity.changeFragment(new DefaultFragment(), "DefaultFragment");
                 } else {
-                    MainActivity.mainActivity.changeFragment(new MainPage());
+                    MainActivity.mainActivity.changeFragment(new MainFragment(), "MainFragment");
                 }
             }
         });

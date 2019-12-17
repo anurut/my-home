@@ -1,4 +1,4 @@
-package com.anurut.myHome.helper;
+package com.anurut.myHome.mqtt;
 
 import android.util.Log;
 

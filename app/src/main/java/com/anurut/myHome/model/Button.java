@@ -1,8 +1,8 @@
-package com.anurut.myHome.button;
+package com.anurut.myHome.model;
 
 import java.util.ArrayList;
 
-public class ButtonData {
+public class Button {
 
     private String buttonName;
     private int defaultImageId;
@@ -19,12 +19,12 @@ public class ButtonData {
     private String lwtTopic;
     private String lwt_available;
     private String lwt_unavailable;
-    private static ArrayList<ButtonData> buttonDataArrayList = new ArrayList<>();
+    private static ArrayList<Button> buttonArrayList = new ArrayList<>();
 
 
-    public ButtonData(String buttonName, String type, int defaultImageId, int imageIdStateOn, int imageIdStateIdle,
-                      String commandTopic, String stateTopic, String roomName , String payloadON, String payloadOFF ,
-                      String buttonState, String lwtTopic, String lwt_available, String lwt_unavailable){
+    public Button(String buttonName, String type, int defaultImageId, int imageIdStateOn, int imageIdStateIdle,
+                  String commandTopic, String stateTopic, String roomName , String payloadON, String payloadOFF ,
+                  String buttonState, String lwtTopic, String lwt_available, String lwt_unavailable){
 
         this.buttonName = buttonName;
         this.defaultImageId = defaultImageId;
@@ -50,12 +50,12 @@ public class ButtonData {
         this.roomName = roomName;
     }
 
-    public static ArrayList<ButtonData> getButtonDataArrayList() {
-        return buttonDataArrayList;
+    public static ArrayList<Button> getButtonArrayList() {
+        return buttonArrayList;
     }
 
-    public static void setButtonDataArrayList(ArrayList<ButtonData> buttonDataArrayList) {
-        ButtonData.buttonDataArrayList = buttonDataArrayList;
+    public static void setButtonArrayList(ArrayList<Button> buttonArrayList) {
+        Button.buttonArrayList = buttonArrayList;
     }
 
     public String getPayloadON() {

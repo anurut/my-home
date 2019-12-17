@@ -1,6 +1,6 @@
-package com.anurut.myHome.room;
+package com.anurut.myHome.model;
 
-public class RoomData {
+public class Room {
 
     private String roomName;
     private int roomImageId;
@@ -10,7 +10,7 @@ public class RoomData {
     private String lwtTopic;
 
 
-    public RoomData(String roomName, int roomImageId, String type) {
+    public Room(String roomName, int roomImageId, String type) {
         this.roomName = roomName;
         this.roomImageId = roomImageId;
         this.type = type;

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/fragment_rooms"
+    android:id="@+id/main_page_frame_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".fragments.MainPage">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".fragments.MainFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/mainActivity"
+        android:id="@+id/main_page_constraint_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         >
 
         <TextView
-            android:id="@+id/mainHeaderText"
+            android:id="@+id/myHomeHeaderText"
             style="@style/headerText"
             android:text="@string/mainHeader"
             app:layout_constraintEnd_toEndOf="parent"
@@ -23,24 +23,23 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
-            android:id="@+id/mqtt_status"
+            android:id="@+id/main_mqtt_status"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textSize="12sp"
             app:fontFamily="@font/roboto_light"
-            android:text="@string/mqtt_status_text"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainHeaderText" />
+            app:layout_constraintTop_toBottomOf="@+id/myHomeHeaderText" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/roomsRecyclerView"
+            android:id="@+id/main_fragment_recyclerView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/mainHeaderText" />
+            app:layout_constraintTop_toBottomOf="@+id/myHomeHeaderText" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

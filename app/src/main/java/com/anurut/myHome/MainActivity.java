@@ -11,15 +11,18 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.anurut.myHome.fragments.DefaultFragment;
-import com.anurut.myHome.fragments.MainPage;
+import com.anurut.myHome.fragments.MainFragment;
+import com.anurut.myHome.fragments.MainViewModel;
+import com.anurut.myHome.fragments.RoomFragment;
 import com.anurut.myHome.fragments.SettingsFragment;
 import com.anurut.myHome.fragments.SettingsFragmentData;
-import com.anurut.myHome.helper.MqttHelper;
-import com.anurut.myHome.helper.MqttMessageReceived;
+import com.anurut.myHome.mqtt.MqttHelper;
+import com.anurut.myHome.mqtt.MqttMessageReceived;
 
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallbackExtended;
@@ -36,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static MainActivity mainActivity;
     public int activityStateCheck = 0;
     public String buttonTagHold = "";
-    Toolbar toolbar;
+    public Toolbar toolbar;
 
 
     @Override
@@ -74,9 +77,11 @@ public class MainActivity extends AppCompatActivity {
             } catch (JSONException e) {
                 e.printStackTrace();
             }
-            changeFragment(new MainPage());
+            changeFragment(new MainFragment());
             startMqtt();
         }
+
+
     }
 
 
@@ -114,8 +119,19 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.commit();
     }
 
-    public void startMqtt() {
+    public void changeFragment(Fragment fragment, String data) {
+        Bundle bundle = new Bundle();
+        bundle.putString("data",data);
 
+        fragment.setArguments(bundle);
+
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.main_frame, fragment);
+        fragmentTransaction.commit();
+    }
+
+    public void startMqtt() {
 
         helper = new MqttHelper(getApplicationContext());
         helper.setCallback(new MqttCallbackExtended() {
@@ -124,12 +140,14 @@ public class MainActivity extends AppCompatActivity {
                 if (reconnect) {
                     Log.w("mqtt", "Reconnected to : " + serverURI);
                     Data.setMqttStatus("connected");
-                    MainPage.refreshMqttStatus();
+                    MainViewModel.setMqttStatus("connected");
+                    //MainPage.refreshMqttStatus();
                     syncButtonStates();
                 } else {
                     Log.w("mqtt: ", "Connected to - ClientID: " + helper.mqttAndroidClient.getClientId() + " " + serverURI);
                     Data.setMqttStatus("connected");
-                    MainPage.refreshMqttStatus();
+                   MainViewModel.setMqttStatus("connected");
+                    //MainPage.refreshMqttStatus();
                     syncButtonStates();
                 }
             }
@@ -139,7 +157,8 @@ public class MainActivity extends AppCompatActivity {
 
                 Log.w("Connection Lost : ", cause);
                 Data.setMqttStatus("disconnected");
-                MainPage.refreshMqttStatus();
+                MainViewModel.setMqttStatus(Data.getMqttStatus());
+                //MainPage.refreshMqttStatus();
             }
 
             @Override
@@ -147,12 +166,9 @@ public class MainActivity extends AppCompatActivity {
                 String msgPayload = new String(message.getPayload());
                 Log.d("mqtt", "Message arrived!, Topic: " + topic + " Payload: " + msgPayload);
 
-                MqttMessageReceived messageReceived = new MqttMessageReceived(topic, message);
+                new MqttMessageReceived(topic, message);
 
-                MainPage.refreshData();
-
-                if (MainActivity.mainActivity.activityStateCheck == 1)
-                    RoomActivity.roomActivity.refreshData(buttonTagHold);
+                //MainPage.refreshData();
 
             }
 
@@ -184,7 +200,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void openMqttSettings() {
 
-        changeFragment(new SettingsFragment());
+        changeFragment(new SettingsFragment(), "SettingsFragment");
 
     }
 }
