@@ -31,8 +31,7 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
         View fragmentItem = layoutInflater.inflate(R.layout.mqtt_roomicon_layout, parent, false);
-        ViewHolder viewHolder = new ViewHolder(fragmentItem);
-        return viewHolder;
+        return new ViewHolder(fragmentItem);
     }
 
     @Override

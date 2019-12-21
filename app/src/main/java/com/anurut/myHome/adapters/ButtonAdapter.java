@@ -22,14 +22,10 @@ import java.util.ArrayList;
 public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListViewHolder> {
 
     private ArrayList<Button> buttonData;
-    //private Activity activity;
-    //private String mqttStatus;
 
     public ButtonAdapter(ArrayList<Button> buttonData) {
 
         this.buttonData = buttonData;
-        //this.activity = activity;
-        //this.mqttStatus = mqttStatus;
     }
 
     @NonNull

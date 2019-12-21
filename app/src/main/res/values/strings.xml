@@ -4,7 +4,7 @@
     <string name="tubeLight_text">tube light</string>
     <string name="nightLight_text">night light</string>
     <string name="dummyLight_text">dummy light</string>
-    <string name="mqtt_status_text">Disconnected</string>
+    <string name="mqtt_status_text">connecting</string>
     <string name="syncButton">Sync</string>
 
     <string name="new_titleText">bedroom</string>

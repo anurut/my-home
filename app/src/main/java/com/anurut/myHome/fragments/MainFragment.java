@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.AnimationUtils;
 import android.widget.TextView;
 
 import com.anurut.myHome.Data;
@@ -22,6 +23,9 @@ import com.anurut.myHome.model.Room;
 import com.anurut.myHome.adapters.RoomAdapter;
 
 import java.util.ArrayList;
+import java.util.Objects;
+
+import static com.anurut.myHome.R.string.mqtt_status_text;
 
 public class MainFragment extends Fragment {
 
@@ -47,6 +51,7 @@ public class MainFragment extends Fragment {
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
         bindViews();
+        setMqttStatusConnecting();
 
         mViewModel.getMqttStatus().observe(this, mqttStatusObserver);
 
@@ -55,14 +60,14 @@ public class MainFragment extends Fragment {
         mViewModel.getRoomDataArraylist().observe(this, roomDataArraylistObserver);
     }
 
-    private void bindViews(){
-        recyclerView = getView().findViewById(R.id.main_fragment_recyclerView);
+    private void bindViews() {
+        recyclerView = Objects.requireNonNull(getView()).findViewById(R.id.main_fragment_recyclerView);
         recyclerView.setHasFixedSize(true);
 
         mqttStatus = getView().findViewById(R.id.main_mqtt_status);
     }
 
-    private void setAdapter(){
+    private void setAdapter() {
         adapter = new RoomAdapter(Data.getRoomDataAttayList());
         if (Data.getRoomDataAttayList().size() <= 2)
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
@@ -74,7 +79,14 @@ public class MainFragment extends Fragment {
     private Observer<String> mqttStatusObserver = new Observer<String>() {
         @Override
         public void onChanged(@Nullable String s) {
-            mqttStatus.setText(s);
+
+            if (s != null) {
+                if (s.equalsIgnoreCase("connected")) {
+                    mqttStatus.setText(s);
+                    mqttStatus.getAnimation().cancel();
+                } else
+                    setMqttStatusConnecting();
+            }
         }
     };
 
@@ -84,4 +96,9 @@ public class MainFragment extends Fragment {
             adapter.notifyDataSetChanged();
         }
     };
+
+    private void setMqttStatusConnecting() {
+        mqttStatus.setText(mqtt_status_text);
+        mqttStatus.startAnimation(AnimationUtils.loadAnimation(getContext(), R.anim.fade_in_out));
+    }
 }

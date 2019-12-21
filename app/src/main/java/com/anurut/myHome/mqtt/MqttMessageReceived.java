@@ -3,6 +3,7 @@ package com.anurut.myHome.mqtt;
 import android.util.Log;
 
 import com.anurut.myHome.Data;
+import com.anurut.myHome.MainActivity;
 
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.json.JSONException;
@@ -31,7 +32,7 @@ public class MqttMessageReceived {
     }
 
 
-    public void updateButtonState(String topic, String payloadStr) {
+    private void updateButtonState(String topic, String payloadStr) {
 
         try {
             if (payloadStr.contains("{"))
@@ -39,6 +40,8 @@ public class MqttMessageReceived {
 
             if (topic.contains("POWER") || (topic.contains("tele") && topic.contains("LWT"))) {
                 Data.updateButtonState(topic, message);
+                if (message.toString().equalsIgnoreCase("online"))
+                    MainActivity.mainActivity.syncButtonStates();
             }
 
             if (topic.contains("stat") && topic.contains("RESULT") && payload.has("Time")) {
@@ -59,5 +62,4 @@ public class MqttMessageReceived {
             e.printStackTrace();
         }
     }
-
 }
