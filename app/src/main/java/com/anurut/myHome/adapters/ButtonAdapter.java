@@ -48,6 +48,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
         switch (myButton.getButtonState().toLowerCase()) {
             case "off":
+                holder.imageButton.setEnabled(true);
                 holder.buttonName.setText(myButton.getButtonName());
                 holder.constraintLayout.setBackgroundResource(0);
                 holder.imageButton.setImageResource(myButton.getDefaultImageId());
@@ -61,6 +62,7 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
                 holder.buttonName.setText(myButton.getButtonName());
                 break;
             case "on":
+                holder.imageButton.setEnabled(true);
                 holder.buttonName.setText(myButton.getButtonName());
                 holder.constraintLayout.setBackgroundResource(R.drawable.button_bg_60);
                 holder.imageButton.setImageResource(myButton.getImageIdStateOn());
@@ -103,12 +105,12 @@ public class ButtonAdapter extends RecyclerView.Adapter<ButtonAdapter.MyListView
 
     class MyListViewHolder extends ViewHolder {
 
-        public ImageButton imageButton;
-        public TextView buttonName;
-        public TextView mqttStatus;
-        public androidx.constraintlayout.widget.ConstraintLayout constraintLayout;
+        ImageButton imageButton;
+        TextView buttonName;
+        TextView mqttStatus;
+        androidx.constraintlayout.widget.ConstraintLayout constraintLayout;
 
-        public MyListViewHolder(@NonNull View itemView) {
+        MyListViewHolder(@NonNull View itemView) {
             super(itemView);
 
             this.imageButton = itemView.findViewById(R.id.button);

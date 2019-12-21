@@ -14,13 +14,12 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.TextView;
 
 import com.anurut.myHome.Data;
 import com.anurut.myHome.R;
 import com.anurut.myHome.model.Room;
-import com.anurut.myHome.room.RoomAdapter;
+import com.anurut.myHome.adapters.RoomAdapter;
 
 import java.util.ArrayList;
 
@@ -47,35 +46,42 @@ public class MainFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
 
-        //mViewModel.setRoomDataArraylist(Data.getRoomDataAttayList());
+        bindViews();
 
+        mViewModel.getMqttStatus().observe(this, mqttStatusObserver);
+
+        setAdapter();
+
+        mViewModel.getRoomDataArraylist().observe(this, roomDataArraylistObserver);
+    }
+
+    private void bindViews(){
         recyclerView = getView().findViewById(R.id.main_fragment_recyclerView);
         recyclerView.setHasFixedSize(true);
 
         mqttStatus = getView().findViewById(R.id.main_mqtt_status);
+    }
 
-        mViewModel.getMqttStatus().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(@Nullable String s) {
-                mqttStatus.setText(s);
-            }
-        });
-
-
-
+    private void setAdapter(){
         adapter = new RoomAdapter(Data.getRoomDataAttayList());
         if (Data.getRoomDataAttayList().size() <= 2)
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
         else
             recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
         recyclerView.setAdapter(adapter);
-
-        mViewModel.getRoomDataArraylist().observe(this, new Observer<ArrayList<Room>>() {
-            @Override
-            public void onChanged(ArrayList<Room> roomData) {
-               adapter.notifyDataSetChanged();
-            }
-        });
     }
 
+    private Observer<String> mqttStatusObserver = new Observer<String>() {
+        @Override
+        public void onChanged(@Nullable String s) {
+            mqttStatus.setText(s);
+        }
+    };
+
+    private Observer<ArrayList<Room>> roomDataArraylistObserver = new Observer<ArrayList<Room>>() {
+        @Override
+        public void onChanged(ArrayList<Room> rooms) {
+            adapter.notifyDataSetChanged();
+        }
+    };
 }

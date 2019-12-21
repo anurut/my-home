@@ -1,4 +1,4 @@
-package com.anurut.myHome.room;
+package com.anurut.myHome.adapters;
 
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,29 +18,26 @@ import com.anurut.myHome.model.Room;
 
 import java.util.ArrayList;
 
-public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
+public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder> {
 
     private ArrayList<Room> roomData;
-    //public Context mContext;
 
-    public RoomAdapter(ArrayList<Room> roomData){
+    public RoomAdapter(ArrayList<Room> roomData) {
         this.roomData = roomData;
-        //this.mContext = mContext;
     }
 
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View fragmentItem = layoutInflater.inflate(R.layout.mqtt_roomicon_layout,parent,false);
+        View fragmentItem = layoutInflater.inflate(R.layout.mqtt_roomicon_layout, parent, false);
         ViewHolder viewHolder = new ViewHolder(fragmentItem);
         return viewHolder;
     }
 
     @Override
     public void onBindViewHolder(@NonNull final ViewHolder holder, int position) {
-        final Room myRoom =  roomData.get(position);
+        final Room myRoom = roomData.get(position);
 
         holder.roomIcon.setBackgroundResource(myRoom.getRoomImageId());
         holder.roomIcon.setTag(myRoom.getRoomName());
@@ -49,18 +46,8 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
         holder.roomIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("On Click",v.getTag().toString());
-
-                //String MSG = "com.anurut.myHome.ROOMS";
-                //Intent intent = new Intent(mContext, RoomActivity.class);
-                //Intent intent = new Intent(mContext, MainFragment.class);
+                Log.d("On Click", v.getTag().toString());
                 String roomName = holder.roomIcon.getTag().toString();
-
-
-                //MainActivity.mainActivity.buttonTagHold  =  roomName;
-
-                //intent.putExtra(MSG,roomName);
-                //mContext.startActivity(intent);
                 MainActivity.mainActivity.changeFragment(new RoomFragment(), roomName);
             }
         });
@@ -71,18 +58,16 @@ public class RoomAdapter extends RecyclerView.Adapter<RoomAdapter.ViewHolder>{
         return roomData.size();
     }
 
-    class ViewHolder extends RecyclerView.ViewHolder{
+    class ViewHolder extends RecyclerView.ViewHolder {
+        ImageView roomIcon;
+        TextView roomName;
+        ConstraintLayout roomIconLayout;
 
-        public ImageView roomIcon;
-        public TextView roomName;
-        public ConstraintLayout roomIconLayout;
-
-        public ViewHolder(@NonNull View itemView) {
+        ViewHolder(@NonNull View itemView) {
             super(itemView);
-
             this.roomIcon = itemView.findViewById(R.id.room_icon);
             this.roomName = itemView.findViewById(R.id.roomTextView);
-            this.roomIconLayout=itemView.findViewById(R.id.roomIconConstraint);
+            this.roomIconLayout = itemView.findViewById(R.id.roomIconConstraint);
         }
     }
 }

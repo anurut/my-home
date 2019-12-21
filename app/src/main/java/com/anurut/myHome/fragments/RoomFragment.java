@@ -32,6 +32,7 @@ public class RoomFragment extends Fragment {
     private TextView mqttStatus;
     private RecyclerView.Adapter adapter;
     private ImageButton backButton;
+    private String roomName;
 
     public static RoomFragment newInstance() {
         return new RoomFragment();
@@ -42,7 +43,7 @@ public class RoomFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
 
         MainActivity.mainActivity.toolbar.setVisibility(View.GONE);
-
+        roomName = getArguments().getString("data");
         return inflater.inflate(R.layout.room_fragment, container, false);
     }
 
@@ -51,47 +52,63 @@ public class RoomFragment extends Fragment {
         super.onActivityCreated(savedInstanceState);
         mViewModel = ViewModelProviders.of(this).get(RoomViewModel.class);
 
-        final String roomName = getArguments().getString("data");
         mViewModel.setRoomName(roomName);
 
-        //RoomViewModel.setButtonArrayList(Data.getButtonDataArrayList(roomName));
+        bindViews();
 
+        backButton.setOnClickListener(onBackButtonClickListener);
+
+        mViewModel.getMqttStatus().observe(this, mqttStatusObserver);
+
+        setAdapter();
+
+        mViewModel.getButtonArrayList().observe(this, adapterObserver);
+    }
+
+
+
+
+
+
+
+    void setAdapter() {
+        adapter = new ButtonAdapter(Data.getButtonDataArrayList(roomName));
+        if (Data.getButtonDataArrayList(roomName).size() <= 2)
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+        else
+            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+
+        recyclerView.setAdapter(adapter);
+    }
+
+    private void bindViews(){
         recyclerView = getView().findViewById(R.id.buttonView);
         recyclerView.setHasFixedSize(true);
 
         mqttStatus = getView().findViewById(R.id.mqttStatus);
         backButton = getView().findViewById(R.id.backButton);
-
-        backButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                MainActivity.mainActivity.changeFragment(new MainFragment());
-                MainActivity.mainActivity.toolbar.setVisibility(View.VISIBLE);
-            }
-        });
-
-        mViewModel.getMqttStatus().observe(this, new Observer<String>() {
-            @Override
-            public void onChanged(String s) {
-                mqttStatus.setText(s);
-            }
-        });
-
-
-        adapter = new ButtonAdapter(Data.getButtonDataArrayList(roomName));
-        if(Data.getButtonDataArrayList(roomName).size() <=2)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),1));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(),2));
-
-        recyclerView.setAdapter(adapter);
-
-        mViewModel.getButtonArrayList().observe(this, new Observer<ArrayList<Button>>() {
-            @Override
-            public void onChanged(ArrayList<Button> buttons) {
-               adapter.notifyDataSetChanged();
-            }
-        });
     }
+
+    private View.OnClickListener onBackButtonClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            MainActivity.mainActivity.changeFragment(new MainFragment());
+            MainActivity.mainActivity.toolbar.setVisibility(View.VISIBLE);
+        }
+    };
+
+    private Observer<String> mqttStatusObserver = new Observer<String>() {
+        @Override
+        public void onChanged(String s) {
+            mqttStatus.setText(s);
+        }
+    };
+
+    private Observer<ArrayList<Button>> adapterObserver = new Observer<ArrayList<Button>>() {
+        @Override
+        public void onChanged(ArrayList<Button> buttons) {
+            adapter.notifyDataSetChanged();
+        }
+    };
 
 }

@@ -11,14 +11,12 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
 
 import androidx.appcompat.widget.Toolbar;
 
 import com.anurut.myHome.fragments.DefaultFragment;
 import com.anurut.myHome.fragments.MainFragment;
 import com.anurut.myHome.fragments.MainViewModel;
-import com.anurut.myHome.fragments.RoomFragment;
 import com.anurut.myHome.fragments.SettingsFragment;
 import com.anurut.myHome.fragments.SettingsFragmentData;
 import com.anurut.myHome.mqtt.MqttHelper;
@@ -34,11 +32,8 @@ import org.json.JSONObject;
 public class MainActivity extends AppCompatActivity {
 
     public MqttHelper helper;
-    public static final String MSG = "com.anurut.myHome.ROOMS";
 
     public static MainActivity mainActivity;
-    public int activityStateCheck = 0;
-    public String buttonTagHold = "";
     public Toolbar toolbar;
 
 
