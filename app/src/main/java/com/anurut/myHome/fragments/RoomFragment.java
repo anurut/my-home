@@ -72,13 +72,17 @@ public class RoomFragment extends Fragment {
 
 
     void setAdapter() {
-        adapter = new ButtonAdapter(Data.getButtonDataArrayList(roomName));
-        if (Data.getButtonDataArrayList(roomName).size() <= 2)
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
-        else
-            recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
+        try {
+            adapter = new ButtonAdapter(Data.getButtonDataArrayList(roomName));
+            if (Data.getButtonDataArrayList(roomName).size() <= 2)
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 1));
+            else
+                recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 2));
 
-        recyclerView.setAdapter(adapter);
+            recyclerView.setAdapter(adapter);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void bindViews(){

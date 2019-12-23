@@ -57,7 +57,6 @@ public class MqttMessageReceived {
                     }
                 }
             }
-
         } catch (JSONException e) {
             e.printStackTrace();
         }
