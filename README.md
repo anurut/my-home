@@ -79,5 +79,7 @@ Steps to configure the application
   Click on the *SAVE CONFIG* button and choose *config.json* to save the above contents in the Downloads folder of your phone. You can now update this json as per your requirements and then use the *READ CONFIG* button to load the updated json into the application.
 
 2. Enter MQTT credentials 
-<img src="https://drive.google.com/uc?export=view&id=19-CyHWYCYOrHFfzT3Lxk-iKrzEAtHXjv" height ="500"/>
+
 Click on the *Menu* buttons(three dots on the top right corner) and click on *Mqtt Setup* to get to the screen below
+<img src="https://drive.google.com/uc?export=view&id=191OqShxiOSucOyW8Glp2J2ZOnVOis4Dy" height ="500"/>
+Insert your credentials here and click on the *OK* button
