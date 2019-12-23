@@ -15,12 +15,12 @@ Steps to configure the application
   "Room1":
       {
       "name":"master bedroom",
-      "type":"bedroom",
+      "type":"bedroom", // can be bedroom, bathroom or kitchen as of now
       "show_image":true,
       "Button1":
           {
           "name":"tube light",
-          "type":"light",
+          "type":"light", // can be light, night light, fan, water heater or blank("")
           "command_topic":"cmnd/masterbedroom/POWER1",
           "state_topic":"stat/masterbedroom/POWER1",
           "payload_on":"ON",
@@ -67,12 +67,17 @@ Steps to configure the application
       }
   }
   ```
+  to add another room just copy the "ROOM1" section and use incremental name (eg. Room2, Room3 ...), same in the case of Button.
   or on the welcome screen in the application
   
-  <img src="https://drive.google.com/uc?export=view&id=18zF_VdzWlzVO7kt7gKYpoyw0s89kq61d" height ="500" title="Click for the larger version." />
+  <img src="https://drive.google.com/uc?export=view&id=18zF_VdzWlzVO7kt7gKYpoyw0s89kq61d" height ="500"/>
   
   Click on the *CREATE FILE* button and then *SAVE* button on the next screen.
   
-   <img src="https://drive.google.com/uc?export=view&id=199Jctk3ML8Js-GJEC7qNMGZLYXF3binr" height ="500" title="Click for the larger version." />
+   <img src="https://drive.google.com/uc?export=view&id=199Jctk3ML8Js-GJEC7qNMGZLYXF3binr" height ="500"/>
   
-  
+  Click on the *SAVE CONFIG* button and choose *config.json* to save the above contents in the Downloads folder of your phone. You can now update this json as per your requirements and then use the *READ CONFIG* button to load the updated json into the application.
+
+2. Enter MQTT credentials 
+<img src="https://drive.google.com/uc?export=view&id=19-CyHWYCYOrHFfzT3Lxk-iKrzEAtHXjv" height ="500"/>
+Click on the *Menu* buttons(three dots on the top right corner) and click on *Mqtt Setup* to get to the screen below
